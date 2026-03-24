@@ -236,6 +236,7 @@
 
     /* ── 결과 ── */
     .result { text-align: center; }
+    .result-mobile-top { display: none; }
 
     /* 상단: 캐릭터 + 메모 카드 */
     .result-header {
@@ -474,9 +475,12 @@
       .card-label { font-size: 0.82rem; }
       .btn { padding: 14px 40px; font-size: 1rem; }
 
-      /* 결과 */
+      /* 결과 — 모바일 이미지 교체 */
+      .result-mobile-top { display: block; text-align: center; margin-bottom: 14px; }
+      .result-mobile-top img { width: 130px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12)); }
+      .result-char-img { display: none; }
+      .result-header { justify-content: center; }
       .result-title { font-size: 1.5rem; }
-      .result-char-img { width: 48px; margin-right: -12px; margin-bottom: 6px; }
       .result-memo { padding: 16px 12px; }
       .result-desc { padding: 14px 14px; font-size: 0.86rem; word-break: keep-all; }
       .result-picks-title { font-size: 0.88rem; }
@@ -486,12 +490,14 @@
       .pick-label { font-size: 0.72rem; }
       .pick-page { font-size: 0.62rem; }
 
-      /* 키워드 2+3 고정 */
-      .keywords .keyword:nth-child(1),
-      .keywords .keyword:nth-child(2) { flex: 1 1 42%; text-align: center; }
-      .keywords .keyword:nth-child(3),
-      .keywords .keyword:nth-child(4),
-      .keywords .keyword:nth-child(5) { flex: 1 1 28%; text-align: center; }
+      /* 키워드 3+2 동일 너비 */
+      .keywords { gap: 6px; }
+      .keywords .keyword {
+        flex: 0 0 calc(33.33% - 4px);
+        text-align: center;
+        box-sizing: border-box;
+        padding: 5px 6px;
+      }
 
       /* 타로 카드 */
       .tarot-cards { gap: 8px; }
@@ -1014,6 +1020,9 @@ function renderResult() {
 
   document.getElementById('app').innerHTML = `
     <div class="result">
+      <div class="result-mobile-top">
+        <img src="images/character/배경이미지.png" alt="캐릭터"/>
+      </div>
       <div class="result-header">
         <img class="result-char-img" src="images/character/배경이미지2.webp" alt="캐릭터"/>
         <div class="result-memo">
