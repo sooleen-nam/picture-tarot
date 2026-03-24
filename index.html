@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>심리테스트 — 나는 어떤 사람일까?</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    @font-face {
+      font-family: 'HeirofLight';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/HeirofLightBold.woff') format('woff');
+      font-weight: 700;
+      font-display: swap;
+    }
+  </style>
+  <style>
+    @font-face {
+      font-family: 'MapleStory';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f8ff, #e6f4ff, #f5faff);
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+      color: #2a2a4a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      transition: background 0.7s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 920px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 프로그레스 ── */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .progress-track {
+      flex: 1; height: 6px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 3px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3196FF, #24BEF0);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .progress-text { font-size: 0.85rem; color: #7878a8; white-space: nowrap; }
+
+    /* ── 페이지 타이틀 ── */
+    .page-title {
+      font-size: 1.75rem; font-weight: 800; text-align: center;
+      background: linear-gradient(90deg, #3196FF, #24BEF0);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .page-subtitle { font-size: 0.9rem; color: #7878a8; text-align: center; margin-bottom: 32px; }
+
+    /* ── 카드 그리드 ── */
+    .cards-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 34px;
+      max-width: 634px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card {
+      position: relative;
+      width: 148px;
+      background: #ffffff;
+      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 14px 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      user-select: none;
+    }
+    .card:hover {
+      border-color: #3196FF;
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(49,150,255,0.25);
+    }
+    .card.selected {
+      background: #eef6ff;
+      border-color: #3196FF;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(49,150,255,0.35);
+    }
+    .card-img-wrap {
+      width: 100%; aspect-ratio: 1;
+      border-radius: 10px; overflow: hidden;
+      background: #ffffff;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      mix-blend-mode: multiply;
+      transform: scale(1.07);
+    }
+    .img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: #bbb;
+    }
+    .card-label {
+      font-size: 0.9rem; font-weight: 700;
+      color: #333; text-align: center;
+    }
+    .card.selected .card-label { color: #1a7ae0; }
+
+    .card .check-badge {
+      display: none;
+      position: absolute; top: 8px; right: 8px;
+      width: 22px; height: 22px;
+      background: #3196FF; border-radius: 50%;
+      align-items: center; justify-content: center;
+      font-size: 12px; color: #fff; font-weight: 900;
+    }
+    .card.selected .check-badge { display: flex; }
+
+    /* ── 버튼 ── */
+    .btn-wrap { display: flex; justify-content: center; }
+    .btn {
+      padding: 16px 56px; font-size: 1.1rem; font-weight: 700;
+      border: none; border-radius: 50px;
+      background: linear-gradient(135deg, #3196FF, #24BEF0);
+      color: #fff; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(49,150,255,0.4);
+      transition: all 0.2s; letter-spacing: 0.04em;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(49,150,255,0.5); }
+    .btn:active:not(:disabled) { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── 인트로 ── */
+    .intro { text-align: center; padding: 20px 20px 50px; position: relative; }
+    .intro-logo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 120px;
+    }
+    .character-wrap {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 520px;
+    }
+    .character-img {
+      width: 200px;
+      position: relative;
+      z-index: 2;
+      margin-bottom: -60px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+      transform-origin: 50% 85%;
+      animation: handWave 1.8s ease-in-out infinite;
+    }
+    @keyframes handWave {
+      0%   { transform: rotate(0deg); }
+      20%  { transform: rotate(6deg); }
+      40%  { transform: rotate(-5deg); }
+      60%  { transform: rotate(5deg); }
+      80%  { transform: rotate(-4deg); }
+      100% { transform: rotate(0deg); }
+    }
+    .bonus-banner {
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, #eef6ff, #e0f0ff);
+      border: 1.5px solid rgba(49,150,255,0.25);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-top: 31px;
+      text-align: left;
+    }
+    .bonus-img {
+      width: 88px; flex-shrink: 0;
+      filter: drop-shadow(0 2px 6px rgba(49,150,255,0.2));
+    }
+    .bonus-text { font-size: 0.82rem; color: #3a4a70; line-height: 1.55; }
+    .bonus-text strong { color: #3196FF; font-weight: 800; }
+    .memo-paper {
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 72px 36px 36px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .memo-paper::before {
+      content: '';
+      position: absolute;
+      top: 14px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+    }
+    .intro-title {
+      font-family: 'MapleStory', 'Pretendard', sans-serif;
+      font-size: 2.8rem; font-weight: 900; line-height: 1.25;
+      background: linear-gradient(90deg, #3196FF, #24BEF0, #3196FF);
+      background-size: 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite; margin-bottom: 20px;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      filter: drop-shadow(0 2px 14px rgba(49,150,255,0.28));
+    }
+    @keyframes shine { to { background-position: 200% center; } }
+    .intro-desc { font-size: 0.98rem; color: #5a6080; line-height: 1.9; margin-bottom: 28px; }
+
+    /* ── 결과 ── */
+    .result { text-align: center; }
+
+    /* 상단: 캐릭터 + 메모 카드 */
+    .result-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      margin-bottom: 28px;
+    }
+    .result-char-img {
+      width: 88px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      margin-right: -20px;
+      margin-bottom: 11px;
+      display: block;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.13));
+    }
+    .result-memo {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .result-memo::before {
+      content: '';
+      position: absolute;
+      top: 12px; left: 50%; transform: translateX(-50%);
+      width: 36px; height: 5px;
+      background: #e0e0e0; border-radius: 3px;
+    }
+    .result-label { font-size: 0.82rem; color: #7878a8; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .result-title {
+      font-family: 'MapleStory', 'Pretendard', sans-serif;
+      font-size: 2.5rem; font-weight: 900; margin-bottom: 14px; line-height: 1.2;
+      background: linear-gradient(90deg, #3196FF, #24BEF0);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .keywords {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 6px;
+    }
+    .keyword {
+      padding: 4px 12px; border-radius: 50px;
+      background: rgba(49,150,255,0.1);
+      border: 1px solid rgba(49,150,255,0.4);
+      color: #1a7ae0; font-size: 0.8rem; font-weight: 700;
+    }
+    .result-desc {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px; padding: 22px 26px;
+      font-size: 0.98rem; color: #4a5068;
+      line-height: 1.85; text-align: left; margin-bottom: 32px;
+      white-space: pre-line;
+    }
+    .result-picks-title {
+      font-size: 1rem; font-weight: 700;
+      color: #1a7ae0; margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+    .result-picks {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 20px; margin-bottom: 36px;
+    }
+    .pick {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+    }
+    .pick-img-wrap {
+      width: 130px; height: 130px;
+      border-radius: 14px; overflow: hidden;
+      background: #fff;
+      border: 3px solid rgba(49,150,255,0.5);
+      box-shadow: 0 6px 18px rgba(49,150,255,0.18);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pick-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      mix-blend-mode: multiply;
+      transform: scale(1.07);
+    }
+    .pick-label { font-size: 0.9rem; font-weight: 700; color: #2a2a4a; }
+    .pick-page { font-size: 0.72rem; color: #888; }
+
+    /* ── 타로 카드 ── */
+    .tarot-section {
+      border-radius: 20px;
+      padding: 22px 20px 24px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .tarot-title {
+      font-family: 'MapleStory', 'Pretendard', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      letter-spacing: 0.04em; margin-bottom: 6px;
+    }
+    .tarot-subtitle {
+      font-size: 0.76rem; color: #aaa; margin-bottom: 20px;
+    }
+    .tarot-cards {
+      display: flex; justify-content: center; gap: 14px;
+    }
+    .tarot-card {
+      width: 136px;
+      perspective: 700px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .tarot-card-inner {
+      position: relative;
+      width: 100%; height: 196px;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tarot-card.flipped .tarot-card-inner { transform: rotateY(180deg); }
+    .tarot-face {
+      position: absolute; inset: 0;
+      border-radius: 13px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 10px 8px;
+    }
+    .tarot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 14px 12px 12px; }
+    .tarot-inner-border {
+      position: absolute; inset: 6px;
+      border-radius: 8px;
+      pointer-events: none;
+    }
+    .tarot-symbol {
+      font-size: 1.9rem; margin-bottom: 10px; line-height: 1;
+    }
+    .tarot-card-name {
+      font-size: 0.82rem; font-weight: 800; letter-spacing: 0.06em; color: #fff;
+    }
+    .tarot-hint {
+      font-size: 0.6rem; margin-top: 6px; opacity: 0.65; color: #fff;
+    }
+    .tarot-front-q {
+      font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
+      font-size: 0.62rem;
+      line-height: 1.7; text-align: center; color: #aaa;
+      flex-shrink: 0;
+    }
+    .tarot-value-wrap {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      margin-top: 10px;
+      padding: 8px 2px 0;
+      width: 100%;
+    }
+    .tarot-front-value {
+      font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
+      font-size: 1.05rem; font-weight: 700; line-height: 1.5;
+      text-align: center; word-break: keep-all;
+    }
+
+    /* ── 피드백 모달 ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.38);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 24px;
+      padding: 36px 28px 28px;
+      width: 90%; max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      animation: fadeIn 0.25s ease;
+    }
+    .feedback-q {
+      font-size: 1.35rem; font-weight: 800; text-align: center;
+      background: linear-gradient(90deg, #3196FF, #24BEF0);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.6; margin-bottom: 24px;
+    }
+    .feedback-scale {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .feedback-btn {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 20px; border: 2px solid #cce4ff;
+      border-radius: 50px; background: #fff;
+      cursor: pointer; transition: all 0.18s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .feedback-btn:hover {
+      border-color: #3196FF;
+      background: #eef6ff;
+      transform: translateX(5px);
+      box-shadow: 0 4px 14px rgba(49,150,255,0.18);
+    }
+    .feedback-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3196FF, #24BEF0);
+      color: #fff; font-size: 0.82rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .feedback-label {
+      font-size: 0.95rem; font-weight: 700; color: #2a2a4a;
+    }
+
+    /* ── 구름 배경 ── */
+    .cloud-bg {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .container { position: relative; z-index: 1; }
+
+    /* 배경 그라데이션 흐름 */
+    .intro-sky {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        -45deg,
+        #7ec5e8, #a8d0f4, #f9c5da,
+        #c8b8ec, #b8e4fa, #f0b0cc,
+        #90ccf2, #d4b8f0, #7ec5e8
+      );
+      background-size: 500% 500%;
+      animation: skyMorph 20s ease infinite;
+    }
+    @keyframes skyMorph {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 구름 블롭 — 몽글몽글 부드럽게 */
+    .cloud-blob {
+      position: absolute;
+      border-radius: 50%;
+    }
+    @keyframes cloudFloat {
+      0%   { transform:translate(0,0) scale(1);        opacity:0.78; filter:blur(52px); }
+      25%  { transform:translate(8px,-14px) scale(1.05);  opacity:0.85; filter:blur(46px); }
+      50%  { transform:translate(-6px,-8px) scale(1.08);  opacity:0.75; filter:blur(58px); }
+      75%  { transform:translate(10px,8px) scale(1.02);   opacity:0.82; filter:blur(50px); }
+      100% { transform:translate(0,0) scale(1);        opacity:0.78; filter:blur(52px); }
+    }
+    @keyframes cloudDrift {
+      0%   { transform:translate(0,0) scale(1);         opacity:0.74; filter:blur(56px); }
+      30%  { transform:translate(-10px,-8px) scale(1.06); opacity:0.82; filter:blur(48px); }
+      60%  { transform:translate(8px,-12px) scale(1.03);  opacity:0.70; filter:blur(60px); }
+      80%  { transform:translate(12px,6px) scale(1.07);   opacity:0.80; filter:blur(50px); }
+      100% { transform:translate(0,0) scale(1);         opacity:0.74; filter:blur(56px); }
+    }
+  </style>
+</head>
+<body>
+<div id="cloud-bg" class="cloud-bg" style="display:none"></div>
+<div class="container" id="app"></div>
+
+<script>
+/* ── 데이터 ── */
+const pages = [
+  {
+    title: '1. 가장 마음에 드는 색을 고르세요.',
+    subtitle: '직관적으로 끌리는 색을 골라보세요!',
+    cards: [
+      { label:'빨강', img:'images/page1/page1_1.png',
+        scores:{energy:3, leadership:2, social:1} },
+      { label:'주황', img:'images/page1/page1_2.png',
+        scores:{social:3, energy:2, creativity:1} },
+      { label:'노랑', img:'images/page1/page1_3.png',
+        scores:{creativity:3, energy:1, freedom:1} },
+      { label:'초록', img:'images/page1/page1_4.png',
+        scores:{stability:3, sensitivity:2, social:1} },
+      { label:'파랑', img:'images/page1/page1_5.png',
+        scores:{stability:3, analytical:2, sensitivity:1} },
+      { label:'보라', img:'images/page1/page1_6.png',
+        scores:{creativity:3, sensitivity:2, freedom:1} },
+      { label:'검정', img:'images/page1/page1_7.png',
+        scores:{analytical:3, leadership:1, sensitivity:1} },
+    ]
+  },
+  {
+    title: '2. 가장 마음에 드는 도형을 고르세요.',
+    subtitle: '눈이 가는 모양이 있나요?',
+    cards: [
+      { label:'원',     img:'images/page2/page2_1.png',
+        scores:{social:3, stability:2, sensitivity:1} },
+      { label:'삼각형', img:'images/page2/page2_2.png',
+        scores:{leadership:3, energy:2, analytical:1} },
+      { label:'다각형', img:'images/page2/page2_3.png',
+        scores:{analytical:3, creativity:2, freedom:1} },
+      { label:'사각형', img:'images/page2/page2_4.png',
+        scores:{stability:3, analytical:2, leadership:1} },
+      { label:'하트',   img:'images/page2/page2_5.png',
+        scores:{sensitivity:3, social:2, freedom:1} },
+      { label:'별',     img:'images/page2/page2_6.png',
+        scores:{energy:3, leadership:2, social:1} },
+      { label:'번개',   img:'images/page2/page2_7.png',
+        scores:{energy:3, freedom:2, creativity:1} },
+      { label:'구름',   img:'images/page2/page2_8.png',
+        scores:{freedom:3, creativity:2, sensitivity:1} },
+    ]
+  },
+  {
+    title: '3. 가장 마음에 드는 물건을 고르세요.',
+    subtitle: '왠지 끌리는 물건이 있나요?',
+    cards: [
+      { label:'책',   img:'images/page3/page3_1.png',
+        scores:{analytical:3, creativity:2, stability:1} },
+      { label:'가방', img:'images/page3/page3_2.png',
+        scores:{freedom:3, leadership:2, analytical:1} },
+      { label:'우산', img:'images/page3/page3_3.png',
+        scores:{stability:3, sensitivity:2, analytical:1} },
+      { label:'시계', img:'images/page3/page3_4.png',
+        scores:{analytical:3, stability:2, leadership:1} },
+      { label:'의자', img:'images/page3/page3_5.png',
+        scores:{stability:3, sensitivity:2, social:1} },
+      { label:'신발', img:'images/page3/page3_6.png',
+        scores:{freedom:3, energy:2, creativity:1} },
+      { label:'거울', img:'images/page3/page3_7.png',
+        scores:{sensitivity:3, creativity:2, analytical:1} },
+    ]
+  },
+  {
+    title: '4. 가장 마음에 드는 동물을 고르세요.',
+    subtitle: '나와 닮은 동물이 있나요?',
+    cards: [
+      { label:'사자',   img:'images/page4/page4_1.png',
+        scores:{leadership:3, energy:3, analytical:1} },
+      { label:'토끼',   img:'images/page4/page4_2.png',
+        scores:{sensitivity:3, stability:2, social:1} },
+      { label:'새',     img:'images/page4/page4_3.png',
+        scores:{freedom:3, creativity:2, energy:1} },
+      { label:'개',     img:'images/page4/page4_4.png',
+        scores:{social:3, stability:2, sensitivity:1} },
+      { label:'곰',     img:'images/page4/page4_5.png',
+        scores:{stability:3, leadership:2, sensitivity:1} },
+      { label:'물고기', img:'images/page4/page4_6.png',
+        scores:{sensitivity:3, freedom:2, creativity:1} },
+      { label:'양',     img:'images/page4/page4_7.png',
+        scores:{social:3, sensitivity:2, stability:1} },
+    ]
+  },
+];
+
+const resultTypes = [
+  {
+    key: 'leadership', title: '열정적인 리더형',
+    keywords: ['추진력', '자신감', '카리스마', '결단력', '도전정신'],
+    desc: '결정? 내가 한다! 실행? 내가 먼저! 🔥\n목표가 생기면 뒤도 안 돌아보고 달려가는 타입이에요.\n사람들이 어느새 당신을 따라가고 있는 건 우연이 아니랍니다.\n강한 추진력과 카리스마는 당신만의 최고 무기! ⚡\n다만 가끔은 주변 속도에 맞춰주는 배려도 잊지 마세요.\n당신 곁에 있는 사람들도 함께 빛날 수 있게요.',
+    colors: { c1:'#D32F2F', c2:'#FF5252', kbg:'rgba(211,47,47,0.08)', kborder:'rgba(211,47,47,0.35)', ktext:'#C62828', bg:'linear-gradient(135deg,#fff5f5,#ffe8e8,#fff8f8)' },
+  },
+  {
+    key: 'energy', title: '활동적인 탐험가형',
+    keywords: ['행동력', '모험심', '즉흥성', '활기', '도전'],
+    desc: '가만히 있는 게 제일 힘든 사람! 🏃\n새로운 게 보이면 일단 뛰어드는 타입이에요.\n"계획은 나중에, 일단 가자!"가 인생 모토인 당신.\n즉흥적이고 활기찬 에너지로 어디서든 분위기를 확 바꿔놓죠. 🌟\n가끔 너무 앞서가는 게 탈이지만,\n그게 바로 당신만의 가장 큰 매력이에요!',
+    colors: { c1:'#E65100', c2:'#FF9500', kbg:'rgba(230,81,0,0.08)', kborder:'rgba(230,81,0,0.35)', ktext:'#BF360C', bg:'linear-gradient(135deg,#fff8f0,#fff0e0,#fffaf5)' },
+  },
+  {
+    key: 'creativity', title: '창의적인 아이디어형',
+    keywords: ['상상력', '창의성', '독창성', '영감', '유머감각'],
+    desc: '"어떻게 그런 생각을 했어?" 자주 듣는 말이죠? ✨\n남들이 직선으로 갈 때 당신은 곡선으로 가는 타입이에요.\n기발한 아이디어와 독특한 시각이 일상 속 당신의 무기!\n엉뚱함이 때론 최고의 해결책이 되기도 하죠.\n그 창의력, 절대 숨기지 마세요. 🎨\n세상이 당신을 필요로 하고 있어요!',
+    colors: { c1:'#7B1FA2', c2:'#CE93D8', kbg:'rgba(123,31,162,0.08)', kborder:'rgba(123,31,162,0.35)', ktext:'#6A1B9A', bg:'linear-gradient(135deg,#f8f0ff,#f0e0ff,#faf5ff)' },
+  },
+  {
+    key: 'stability', title: '신중한 현실주의형',
+    keywords: ['안정감', '계획성', '신뢰', '실용주의', '꼼꼼함'],
+    desc: '"잠깐, 이거 괜찮은 거 맞아?" 항상 한 번 더 확인하는 사람! 🔍\n섣불리 움직이기보단 완벽히 준비한 뒤 실행하는 타입이에요.\n그래서 당신이 "할게"라고 하면 모두가 안심하죠.\n누구보다 믿음직스러운 든든한 존재! 🌿\n가끔은 완벽한 준비 없이도 도전해봐요.\n의외로 잘 되거든요!',
+    colors: { c1:'#2E7D32', c2:'#66BB6A', kbg:'rgba(46,125,50,0.08)', kborder:'rgba(46,125,50,0.35)', ktext:'#1B5E20', bg:'linear-gradient(135deg,#f0fff0,#e0f5e0,#f5fff5)' },
+  },
+  {
+    key: 'social', title: '따뜻한 공감자형',
+    keywords: ['친화력', '공감능력', '사교성', '배려심', '소통왕'],
+    desc: '누구와도 금방 친해지는 천상 사교왕! 🤗\n상대의 감정을 귀신같이 읽어내는 공감 능력을 가졌어요.\n당신 주변에 항상 사람이 많은 건 절대 우연이 아니랍니다.\n따뜻함과 배려가 최강의 조합을 이루고 있어요! ☀️\n모두가 당신 옆에 있고 싶어한다는 거,\n알고 있었나요?',
+    colors: { c1:'#F57F17', c2:'#FFCA28', kbg:'rgba(245,127,23,0.1)', kborder:'rgba(245,127,23,0.4)', ktext:'#E65100', bg:'linear-gradient(135deg,#fffdf0,#fff8e0,#fffef5)' },
+  },
+  {
+    key: 'sensitivity', title: '감성적인 예술가형',
+    keywords: ['감수성', '직관력', '섬세함', '공감', '내면의 깊이'],
+    desc: '남들이 지나치는 것도 당신은 느끼는 타입! 🌸\n작은 것에도 감동받고, 일상 속 아름다움을 발견해요.\n직관이 뛰어나 "느낌"으로 상황을 먼저 파악하죠.\n그 섬세한 내면이 당신을 특별하게 만드는 이유예요. 🎵\n감성을 표현할수록 주변 사람들은\n당신의 세계에 빠져들게 된답니다!',
+    colors: { c1:'#283593', c2:'#7986CB', kbg:'rgba(40,53,147,0.08)', kborder:'rgba(40,53,147,0.35)', ktext:'#1A237E', bg:'linear-gradient(135deg,#f0f0ff,#e8e8ff,#f5f5ff)' },
+  },
+  {
+    key: 'analytical', title: '독창적인 사색가형',
+    keywords: ['분석력', '논리력', '통찰력', '깊이', '독립적 사고'],
+    desc: '겉으로는 조용해 보여도 머릿속은 풀가동 중! 🧠\n세상을 논리적으로 분석하고 본질을 꿰뚫어 보는 타입이에요.\n복잡한 문제도 침착하게 정리해 명쾌한 답을 내놓죠.\n"어떻게 알았어?" 소리 자주 듣지 않나요? 🔬\n그 깊은 생각들을 더 자주 꺼내 보여주세요.\n모두가 감탄할 준비가 돼 있답니다!',
+    colors: { c1:'#00695C', c2:'#26A69A', kbg:'rgba(0,105,92,0.08)', kborder:'rgba(0,105,92,0.35)', ktext:'#004D40', bg:'linear-gradient(135deg,#f0fffe,#e0f8f5,#f5fffd)' },
+  },
+  {
+    key: 'freedom', title: '자유로운 몽상가형',
+    keywords: ['자유로움', '상상력', '유연성', '개방성', '독립심'],
+    desc: '"왜 꼭 그렇게 해야 해?" 이 말이 자연스럽게 나오는 사람! 🌈\n틀에 갇히는 걸 싫어하고 상상력이 넘쳐나는 자유로운 영혼이에요.\n고정관념? 당신에겐 그냥 깨라고 있는 것!\n언제나 새로운 가능성을 꿈꾸는 낭만주의자. 🦋\n그 자유로운 에너지가 세상을\n더 재미있는 곳으로 만들어줘요!',
+    colors: { c1:'#0277BD', c2:'#29B6F6', kbg:'rgba(2,119,189,0.08)', kborder:'rgba(2,119,189,0.35)', ktext:'#01579B', bg:'linear-gradient(135deg,#f0f8ff,#e0f2ff,#f5faff)' },
+  },
+];
+
+/* ── 페이지별 배경색 ── */
+const pageBgs = [
+  'linear-gradient(135deg, #eaf4ff, #d8ecff, #f0f8ff)', // 1번 — 연블루 (색)
+  'linear-gradient(135deg, #e0f8ff, #ccf2ff, #eafbff)', // 2번 — 연하늘 (도형)
+  'linear-gradient(135deg, #e8f4ff, #d4ebff, #f0f8ff)', // 3번 — 연블루 (물건)
+  'linear-gradient(135deg, #e2f7ff, #cef1ff, #ecfaff)', // 4번 — 연하늘 (동물)
+];
+const introBg  = 'transparent'; // intro-sky 애니메이션이 담당
+const resultBg = 'linear-gradient(135deg, #eaf4ff, #d8ecff, #f2f8ff)'; // 연블루
+
+function setBg(bg) { document.body.style.background = bg; }
+
+function showCloudBg() {
+  const bg = document.getElementById('cloud-bg');
+  bg.style.display = 'block';
+  if (bg.children.length) return; // 이미 생성됨
+  const sky = document.createElement('div');
+  sky.className = 'intro-sky';
+  bg.appendChild(sky);
+  const blobs = [
+    { w:340, h:280, top:'-70px',    right:'-60px',  bg:'radial-gradient(circle at 40% 40%, #f9c5da, #f49ec4)', dur:'16s', delay:'0s',   anim:'cloudFloat' },
+    { w:260, h:210, top:'10px',     right:'80px',   bg:'radial-gradient(circle at 50% 50%, #f4b8d0, #e888b8)', dur:'13s', delay:'-4s',  anim:'cloudDrift'  },
+    { w:200, h:170, top:'60px',     right:'200px',  bg:'radial-gradient(circle at 45% 55%, #f9d0e6, #f4a8cc)', dur:'18s', delay:'-9s',  anim:'cloudFloat'  },
+    { w:360, h:290, bottom:'-80px', left:'-70px',   bg:'radial-gradient(circle at 55% 45%, #a8dcf8, #78bced)', dur:'17s', delay:'-3s',  anim:'cloudDrift'  },
+    { w:260, h:210, bottom:'20px',  left:'60px',    bg:'radial-gradient(circle at 50% 50%, #b8e4fa, #8ccbf0)', dur:'14s', delay:'-7s',  anim:'cloudFloat'  },
+    { w:200, h:160, bottom:'80px',  left:'200px',   bg:'radial-gradient(circle at 45% 55%, #c8ecff, #9ad4f8)', dur:'19s', delay:'-11s', anim:'cloudDrift'  },
+    { w:180, h:150, top:'38%',      left:'30%',     bg:'radial-gradient(circle at 50% 50%, #d8b8f0, #c098e8)', dur:'15s', delay:'-6s',  anim:'cloudFloat'  },
+    { w:160, h:130, top:'25%',      right:'25%',    bg:'radial-gradient(circle at 50% 50%, #f8d4e8, #f0aed0)', dur:'12s', delay:'-8s',  anim:'cloudDrift'  },
+  ];
+  blobs.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'cloud-blob';
+    el.style.cssText = `
+      width:${b.w}px; height:${b.h}px;
+      ${b.top    ? 'top:'    + b.top    + ';' : ''}
+      ${b.bottom ? 'bottom:' + b.bottom + ';' : ''}
+      ${b.left   ? 'left:'   + b.left   + ';' : ''}
+      ${b.right  ? 'right:'  + b.right  + ';' : ''}
+      background:${b.bg};
+      animation:${b.anim} ${b.dur} ease-in-out infinite ${b.delay};
+    `;
+    bg.appendChild(el);
+  });
+}
+
+function hideCloudBg() {
+  document.getElementById('cloud-bg').style.display = 'none';
+}
+
+/* ── 상태 ── */
+let currentPage = 0;
+let selectedCards = [];
+let totalScores = {};
+
+function resetScores() {
+  totalScores = {energy:0,creativity:0,stability:0,social:0,
+                  leadership:0,freedom:0,sensitivity:0,analytical:0};
+}
+
+function getResult() {
+  const top = Object.entries(totalScores).sort((a,b)=>b[1]-a[1])[0][0];
+  return resultTypes.find(r => r.key === top) || resultTypes[0];
+}
+
+function flipTarot(idx) {
+  const card = document.getElementById(`tcard-${idx}`);
+  if (card) card.classList.toggle('flipped');
+}
+
+/* ── 오늘의 행운 ── */
+function getTodayFortune(typeKey, picks) {
+  const today = new Date();
+  const pickStr = (picks || []).join('-');
+  const dateStr = `${today.getFullYear()}${today.getMonth()}${today.getDate()}${typeKey}${pickStr}`;
+  let seed = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    seed = ((seed * 31) + dateStr.charCodeAt(i)) & 0x7fffffff;
+  }
+  function rand(max) {
+    seed = ((seed * 1664525) + 1013904223) & 0x7fffffff;
+    return seed % max;
+  }
+
+  const number = rand(45) + 1;
+
+  const times = [
+    '오전 7시', '오전 7시 30분', '오전 9시', '오전 10시 30분',
+    '오전 11시', '오후 12시 30분', '오후 1시', '오후 2시',
+    '오후 3시 30분', '오후 4시', '오후 5시', '오후 6시 30분',
+    '오후 7시', '오후 8시', '오후 9시 30분', '오후 10시',
+  ];
+  const luckyTime = times[rand(times.length)];
+
+  const itemsByType = {
+    leadership: ['붉은 머그컵', '황금 볼펜', '빨간 넥타이', '트로피 열쇠고리', '빨간 메모장', '선글라스', '위스키 초콜릿', '파워풀한 향수'],
+    energy:     ['오렌지 주스', '운동화', '에너지바', '밝은 노란 모자', '비타민C', '짜릿한 탄산음료', '자전거 열쇠고리', '등산 스틱'],
+    creativity: ['보라색 노트', '색연필 세트', '달 모양 책갈피', '무지개 포스트잇', '화분 하나', '낯선 장르의 책', '신기한 모양 클립', '드로잉 패드'],
+    stability:  ['초록 식물', '체크리스트 수첩', '나무 책갈피', '따뜻한 녹차', '에코백', '아로마 캔들', '심플한 손목시계', '깔끔한 파일 홀더'],
+    social:     ['노란 손수건', '홈메이드 쿠키', '따뜻한 라떼', '귀여운 스티커 세트', '미니 꽃다발', '감사 카드', '복숭아 젤리', '캐릭터 머그컵'],
+    sensitivity:['파란 펜', '음악 플레이리스트', '별 모양 스티커', '수채화 엽서', '달빛 향 디퓨저', '감성 시집', '밤하늘 엽서', '조용한 카페 쿠폰'],
+    analytical: ['책 한 권', '초록 형광펜', '고급 샤프펜슬', '두꺼운 노트', '차분한 허브차', '큐브 장난감', '미니 화이트보드', '논리 퍼즐'],
+    freedom:    ['클로버', '세계 지도 엽서', '미니 나침반', '무지개 팔찌', '향기로운 차', '꿈일기 노트', '풍선 키링', '새 모양 책갈피'],
+  };
+  const itemPool = itemsByType[typeKey] || itemsByType.freedom;
+  const luckyItem = itemPool[rand(itemPool.length)];
+
+  const msgsByType = {
+    leadership: [
+      '오늘 당신의 결정이 판을 바꿀 수 있어요!',
+      '아무도 못 말린다, 오늘의 당신!',
+      '리더의 카리스마, 오늘은 더 빛납니다.',
+      '먼저 나서는 사람이 기회를 잡아요!',
+      '오늘 한 번 더 도전해보세요. 이번엔 달라요!',
+      '큰 그림을 그리기 딱 좋은 날이에요!',
+      '당신이 말하면 사람들이 귀 기울이게 될 거예요.',
+      '오늘 내린 결단, 나중에 잘했다고 느낄 거예요.',
+    ],
+    energy: [
+      '오늘은 일단 몸부터 움직여보세요!',
+      '막혔던 게 오늘은 뻥 뚫릴 것 같아요!',
+      '예상치 못한 곳에서 신나는 일이 생길 거예요!',
+      '계획 없이 떠나는 하루, 오늘은 그래도 돼요!',
+      '에너지가 넘치는 하루! 마음껏 달려보세요.',
+      '즉흥적으로 약속 잡아보세요. 분위기 장난 아닐 거예요!',
+      '지금 이 순간 느끼는 것, 바로 행동으로!',
+      '새로운 길을 걷는 것, 오늘은 용기 있는 선택이에요!',
+    ],
+    creativity: [
+      '"어떻게 그런 생각을 했어?" 오늘도 들을 준비 되셨나요?',
+      '엉뚱한 아이디어가 오늘은 정답일 수 있어요!',
+      '떠오르는 생각, 바로 적어두세요. 나중에 후회해요!',
+      '오늘은 다르게 해봐요. 남들이 안 간 길로!',
+      '창의력이 폭발하는 날! 뭔가 만들어보세요.',
+      '평소엔 안 하던 것에 도전해보세요. 잘 맞을 거예요!',
+      '오늘 떠오른 아이디어, 흘려보내지 마세요!',
+      '당신의 상상이 오늘 현실에 가까워질 거예요.',
+    ],
+    stability: [
+      '준비된 자에게 기회가 와요. 오늘 당신이 바로 그 사람!',
+      '꼼꼼히 체크한 덕분에 실수를 피하게 될 거예요.',
+      '급하게 가지 않아도 돼요. 오늘도 묵묵히!',
+      '신뢰받는 당신, 오늘도 조용히 빛나고 있어요.',
+      '한 가지를 완벽하게 끝내는 날로 삼아보세요!',
+      '차분한 판단이 오늘 큰 차이를 만들어요.',
+      '오늘 한 일이 내일의 든든한 토대가 될 거예요.',
+      '서두르지 않아도 당신의 페이스가 정답이에요.',
+    ],
+    social: [
+      '오늘 당신의 따뜻한 말 한마디가 누군가를 구할 수도 있어요.',
+      '먼저 연락해보세요. 상대방도 기다리고 있을 거예요!',
+      '웃는 얼굴이 오늘의 최강 아이템이에요!',
+      '오늘 만나는 사람 중에 새 인연이 있을 거예요.',
+      '당신 주변 사람들, 사실 당신 덕에 힘내고 있어요.',
+      '사소한 배려가 오늘 큰 행운을 불러올 거예요!',
+      '오늘은 대화하기 딱 좋은 날! 마음 열어보세요.',
+      '당신의 미소가 오늘 분위기를 통째로 바꿀 거예요.',
+    ],
+    sensitivity: [
+      '오늘 마음이 움직이는 것에 솔직해지세요.',
+      '느끼는 감정, 숨기지 말고 표현해보세요.',
+      '오늘 들은 노래가 오래 기억에 남을 거예요.',
+      '일상의 작은 장면 하나가 오늘 큰 감동을 줄 거예요.',
+      '당신만 느끼는 것들이 오늘 특별한 빛을 발할 거예요.',
+      '감성이 뾰족하게 살아있는 날! 꼭 기록해두세요.',
+      '오늘 당신의 직관, 완전히 믿어도 좋아요.',
+      '아무도 모르는 당신만의 감동, 오늘 찾게 될 거예요.',
+    ],
+    analytical: [
+      '오늘 머릿속 아이디어를 글로 옮겨보세요. 대박 날 수 있어요.',
+      '복잡한 것도 당신이 보면 단순해져요. 오늘 그 능력 발휘할 때!',
+      '"왜?"라는 질문이 오늘 큰 답을 가져올 거예요.',
+      '혼자만의 시간이 오늘 가장 생산적인 시간이 될 거예요.',
+      '깊이 생각한 것들이 오늘 드디어 정리될 거예요!',
+      '남들이 놓친 포인트를 오늘 당신이 잡아낼 거예요.',
+      '분석력 풀가동! 오늘은 문제 해결의 날이에요.',
+      '천천히 읽고 깊이 생각하는 게 오늘의 정답이에요.',
+    ],
+    freedom: [
+      '오늘은 틀을 깨도 완전 괜찮아요!',
+      '갑작스러운 변화가 오늘은 행운이에요.',
+      '계획 없이 시작한 일이 오늘은 최고의 결과를 낼 수 있어요!',
+      '상상만 했던 것, 오늘 한 발짝 실행해보세요!',
+      '자유롭게 움직이는 날! 누가 뭐래도 당신 방식으로!',
+      '오늘은 평소에 안 가던 길로 가보세요. 뭔가 있을 거예요.',
+      '고정관념 내려놓기 딱 좋은 날이에요!',
+      '훌쩍 떠나고 싶은 날이에요. 어디든 가보세요!',
+    ],
+  };
+  const msgPool = msgsByType[typeKey] || msgsByType.freedom;
+  const luckyMsg = msgPool[rand(msgPool.length)];
+
+  return { number, luckyTime, luckyMsg, luckyItem };
+}
+
+/* ── 렌더 함수 ── */
+function renderIntro() {
+  setBg(introBg);
+  showCloudBg();
+  document.getElementById('app').innerHTML = `
+    <div class="intro">
+      <img class="intro-logo" src="images/character/RGB(웹용)_png_Signature_A타입(2도)_컬러.png" alt="로고"/>
+      <div class="character-wrap">
+        <img class="character-img" src="images/character/배경이미지.png" alt="캐릭터"/>
+        <div class="memo-paper">
+          <div class="intro-title">나는 어떤 사람일까?</div>
+          <p class="intro-desc">
+            4가지의 그림 카드를 재미있게 골라보세요.<br>
+            마음이 가장 끌리는 것은 무엇인가요?<br>
+            당신의 숨겨진 성향을 알려드릴게요!
+          </p>
+          <div class="btn-wrap">
+            <button class="btn" onclick="startQuiz()">시작하기</button>
+          </div>
+          <div class="bonus-banner">
+            <img class="bonus-img" src="images/character/보너스.png" alt="보너스"/>
+            <div class="bonus-text">
+              두근두근!<br>
+              마지막에 재미있는 그림 타로가 기다리고 있어요!<br>
+              오늘의 행운을 뽑아 보세요!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPage(pageIdx) {
+  hideCloudBg();
+  setBg(pageBgs[pageIdx]);
+  const page = pages[pageIdx];
+  const progress = (pageIdx / pages.length) * 100;
+
+  const cardsHTML = page.cards.map((card, i) => `
+    <div class="card" id="card-${i}" onclick="selectCard(${i})">
+      <div class="check-badge">✓</div>
+      <div class="card-img-wrap">
+        <img src="${card.img}" alt="${card.label}"
+          onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>🖼️</div>'"/>
+      </div>
+      <div class="card-label">${card.label}</div>
+    </div>`).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${progress}%"></div>
+      </div>
+      <span class="progress-text">${pageIdx + 1} / ${pages.length}</span>
+    </div>
+    <h2 class="page-title">${page.title}</h2>
+    <p class="page-subtitle">${page.subtitle}</p>
+    <div class="cards-grid">${cardsHTML}</div>
+    <div class="btn-wrap">
+      <button class="btn" id="nextBtn" onclick="nextPage()" disabled>
+        ${pageIdx < pages.length - 1 ? '다음으로 →' : '결과 보기'}
+      </button>
+    </div>`;
+}
+
+function selectCard(idx) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`card-${idx}`).classList.add('selected');
+  selectedCards[currentPage] = idx;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextPage() {
+  if (selectedCards[currentPage] === undefined) return;
+  const card = pages[currentPage].cards[selectedCards[currentPage]];
+  Object.entries(card.scores).forEach(([k, v]) => { totalScores[k] += v; });
+  currentPage++;
+  if (currentPage >= pages.length) renderResult();
+  else renderPage(currentPage);
+}
+
+function startQuiz() {
+  currentPage = 0;
+  selectedCards = [];
+  resetScores();
+  renderPage(0);
+}
+
+function renderResult() {
+  hideCloudBg();
+  const r = getResult();
+  setBg(r.colors.bg);
+
+  const c = r.colors;
+  const titleStyle = `background:linear-gradient(90deg,${c.c1},${c.c2});-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;`;
+  const kwStyle = `background:${c.kbg};border:1px solid ${c.kborder};color:${c.ktext};`;
+
+  const fortune = getTodayFortune(r.key, selectedCards);
+
+  const picksHTML = selectedCards.map((cardIdx, pageIdx) => {
+    const card = pages[pageIdx].cards[cardIdx];
+    return `<div class="pick">
+      <div class="pick-img-wrap" style="border-color:${c.c1}80;box-shadow:0 6px 18px ${c.c1}25;">
+        <img src="${card.img}" alt="${card.label}"
+          onerror="this.parentElement.style.background='#f0f0f0'"/>
+      </div>
+      <span class="pick-label">${card.label}</span>
+      <span class="pick-page">${pageIdx+1}번 질문</span>
+    </div>`;
+  }).join('');
+
+  const keywordsHTML = r.keywords.map(k => `<span class="keyword" style="${kwStyle}"># ${k}</span>`).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="result">
+      <div class="result-header">
+        <img class="result-char-img" src="images/character/배경이미지2.webp" alt="캐릭터"/>
+        <div class="result-memo">
+          <div class="result-label">당신의 유형은</div>
+          <div class="result-title" style="${titleStyle}">${r.title}</div>
+          <div class="keywords">${keywordsHTML}</div>
+        </div>
+      </div>
+      <p class="result-picks-title" style="color:${c.c1}">✦ 선택한 카드 다시보기 ✦</p>
+      <div class="result-picks">${picksHTML}</div>
+      <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}</div>
+      <div class="tarot-section" style="border:2px solid ${c.c1}30; background:${c.kbg};">
+        <div class="tarot-title" style="color:${c.c1}">그림 타로! 오늘의 행운은?</div>
+        <p class="tarot-subtitle">카드를 한 장씩 뒤집어 보세요</p>
+        <div class="tarot-cards">
+          <div class="tarot-card" id="tcard-0" onclick="flipTarot(0)">
+            <div class="tarot-card-inner">
+              <div class="tarot-face tarot-back-face" style="background:${c.c1};">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div>
+                <div class="tarot-symbol" style="color:${c.c2};">☽</div>
+                <div class="tarot-card-name">카드 A</div>
+                <div class="tarot-hint">탭하여 확인</div>
+              </div>
+              <div class="tarot-face tarot-front-face" style="background:#fff; box-shadow:inset 0 0 0 2px ${c.c1}30;">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
+                <div class="tarot-front-q">오늘 행운이<br>찾아오는 시각은</div>
+                <div class="tarot-value-wrap">
+                  <div class="tarot-front-value" style="color:${c.c1};">${fortune.luckyTime}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tarot-card" id="tcard-1" onclick="flipTarot(1)">
+            <div class="tarot-card-inner">
+              <div class="tarot-face tarot-back-face" style="background:${c.c1};">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div>
+                <div class="tarot-symbol" style="color:${c.c2};">✦</div>
+                <div class="tarot-card-name">카드 B</div>
+                <div class="tarot-hint">탭하여 확인</div>
+              </div>
+              <div class="tarot-face tarot-front-face" style="background:#fff; box-shadow:inset 0 0 0 2px ${c.c1}30;">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
+                <div class="tarot-front-q">지녀야 할<br>행운 아이템은</div>
+                <div class="tarot-value-wrap">
+                  <div class="tarot-front-value" style="color:${c.c1};">${fortune.luckyItem}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tarot-card" id="tcard-2" onclick="flipTarot(2)">
+            <div class="tarot-card-inner">
+              <div class="tarot-face tarot-back-face" style="background:${c.c1};">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div>
+                <div class="tarot-symbol" style="color:${c.c2};">☀</div>
+                <div class="tarot-card-name">카드 C</div>
+                <div class="tarot-hint">탭하여 확인</div>
+              </div>
+              <div class="tarot-face tarot-front-face" style="background:#fff; box-shadow:inset 0 0 0 2px ${c.c1}30;">
+                <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
+                <div class="tarot-front-q">오늘의<br>행운 한 마디</div>
+                <div class="tarot-value-wrap">
+                  <div class="tarot-front-value" style="color:${c.c1};">"${fortune.luckyMsg}"</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-wrap">
+        <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">다시 하기</button>
+      </div>
+    </div>`;
+}
+
+function showFeedbackModal() {
+  const options = ['매우 그렇다', '그렇다', '보통이다', '아니다', '매우 아니다'];
+  const optionsHTML = options.map((label, i) => `
+    <button class="feedback-btn" onclick="closeFeedbackModal()">
+      <span class="feedback-num">${5 - i}</span>
+      <span class="feedback-label">${label}</span>
+    </button>`).join('');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'feedback-overlay';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <p class="feedback-q">평소에 생각하던 나와<br>얼마나 같은가요?</p>
+      <div class="feedback-scale">${optionsHTML}</div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function closeFeedbackModal() {
+  const el = document.getElementById('feedback-overlay');
+  if (el) el.remove();
+  renderIntro();
+}
+
+renderIntro();
+</script>
+</body>
+</html>
