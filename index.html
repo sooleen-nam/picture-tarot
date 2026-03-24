@@ -463,7 +463,7 @@
       .memo-paper { padding: 52px 20px 24px; }
       .character-wrap { max-width: 100%; }
       .bonus-img { width: 60px; }
-      .bonus-text { font-size: 0.7rem; line-height: 1.5; }
+      .bonus-text { font-size: 0.65rem; line-height: 1.45; word-break: keep-all; }
       .bonus-banner { padding: 10px 12px; gap: 8px; }
 
       /* 퀴즈 카드 */
@@ -486,17 +486,27 @@
       .pick-label { font-size: 0.72rem; }
       .pick-page { font-size: 0.62rem; }
 
+      /* 키워드 2+3 고정 */
+      .keywords .keyword:nth-child(1),
+      .keywords .keyword:nth-child(2) { flex: 1 1 42%; text-align: center; }
+      .keywords .keyword:nth-child(3),
+      .keywords .keyword:nth-child(4),
+      .keywords .keyword:nth-child(5) { flex: 1 1 28%; text-align: center; }
+
       /* 타로 카드 */
       .tarot-cards { gap: 8px; }
       .tarot-card { width: 100px; }
-      .tarot-card-inner { height: 150px; }
-      .tarot-symbol { font-size: 1.5rem; }
-      .tarot-card-name { font-size: 0.72rem; }
-      .tarot-hint { font-size: 0.55rem; }
-      .tarot-front-q { font-size: 0.55rem; }
-      .tarot-front-value { font-size: 0.82rem; }
-      .tarot-title { font-size: 0.9rem; }
-      .tarot-section { padding: 18px 12px 18px; }
+      .tarot-card-inner { height: 155px; }
+      .tarot-face { padding: 8px 6px; }
+      .tarot-front-face { padding: 10px 8px 8px; }
+      .tarot-symbol { font-size: 1.4rem; margin-bottom: 7px; }
+      .tarot-card-name { font-size: 0.7rem; }
+      .tarot-hint { font-size: 0.52rem; }
+      .tarot-front-q { font-size: 0.52rem; line-height: 1.55; }
+      .tarot-value-wrap { overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 7px; padding: 6px 2px 0; }
+      .tarot-front-value { font-size: 0.75rem; line-height: 1.45; }
+      .tarot-title { font-size: 0.88rem; }
+      .tarot-section { padding: 16px 10px 16px; }
     }
 
     /* ── 구름 배경 ── */
@@ -916,6 +926,8 @@ function renderIntro() {
 }
 
 function renderPage(pageIdx) {
+  _blockSelect = true;
+  setTimeout(() => { _blockSelect = false; }, 500);
   hideCloudBg();
   setBg(pageBgs[pageIdx]);
   const page = pages[pageIdx];
@@ -948,7 +960,9 @@ function renderPage(pageIdx) {
     </div>`;
 }
 
+let _blockSelect = false;
 function selectCard(idx) {
+  if (_blockSelect) return;
   document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
   document.getElementById(`card-${idx}`).classList.add('selected');
   selectedCards[currentPage] = idx;
