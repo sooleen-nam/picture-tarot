@@ -99,11 +99,19 @@
       display: flex; flex-direction: column;
       align-items: center; gap: 10px;
       user-select: none;
+      touch-action: manipulation;
     }
     .card:hover {
       border-color: #3196FF;
       transform: translateY(-5px);
       box-shadow: 0 6px 20px rgba(49,150,255,0.25);
+    }
+    @media (hover: none) {
+      .card:hover {
+        border-color: #e0e0e0;
+        transform: none;
+        box-shadow: none;
+      }
     }
     .card.selected {
       background: #eef6ff;
@@ -932,7 +940,7 @@ function renderIntro() {
 
 function renderPage(pageIdx) {
   _blockSelect = true;
-  setTimeout(() => { _blockSelect = false; }, 500);
+  setTimeout(() => { _blockSelect = false; }, 1000);
   window.scrollTo({ top: 0, behavior: 'smooth' });
   hideCloudBg();
   setBg(pageBgs[pageIdx]);
