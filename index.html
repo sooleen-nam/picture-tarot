@@ -1171,12 +1171,87 @@ function renderPage(pageIdx) {
 }
 
 let _blockSelect = false;
+/* ── 색 카드 파티클 효과 ── */
+const colorEffects = {
+  '빨강':  { shapes:['❤️','💕','🩷','♥'], colors:['#FF1744','#FF4081','#F50057','#FF6B8A'], label:'hearts' },
+  '주황':  { shapes:['🔥','✦','★','◆'],   colors:['#FF6D00','#FF9100','#FFAB40','#FF6B35'], label:'fire' },
+  '노랑':  { shapes:['✿','❋','✽','✾'],   colors:['#FFD600','#FFEA00','#FFF176','#F9A825'], label:'flower' },
+  '초록':  { shapes:['🍀','🌿','♣','✤'],  colors:['#00C853','#69F0AE','#1B5E20','#43A047'], label:'clover' },
+  '파랑':  { shapes:['💧','❄','✦','◉'],  colors:['#2979FF','#40C4FF','#0091EA','#82B1FF'], label:'drop' },
+  '보라':  { shapes:['⭐','💜','✦','◈'],  colors:['#AA00FF','#CE93D8','#7B1FA2','#E040FB'], label:'star' },
+  '검정':  { shapes:['⚡','✦','◆','▲'],  colors:['#212121','#616161','#9E9E9E','#424242'], label:'spark' },
+};
+
+function triggerColorEffect(cardEl, colorLabel) {
+  const effect = colorEffects[colorLabel];
+  if (!effect) return;
+
+  const rect = cardEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const count = 22;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    const shape = effect.shapes[Math.floor(Math.random() * effect.shapes.length)];
+    const color = effect.colors[Math.floor(Math.random() * effect.colors.length)];
+    const size = 14 + Math.random() * 26;
+    const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.6;
+    const dist = 80 + Math.random() * 130;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist;
+    const duration = 700 + Math.random() * 500;
+    const delay = Math.random() * 180;
+    const rotate = (Math.random() - 0.5) * 540;
+
+    el.style.cssText = `
+      position:fixed;
+      left:${cx}px; top:${cy}px;
+      font-size:${size}px;
+      color:${color};
+      pointer-events:none;
+      z-index:9999;
+      user-select:none;
+      transform:translate(-50%,-50%) rotate(0deg) scale(1);
+      opacity:1;
+      transition:transform ${duration}ms cubic-bezier(.2,.8,.4,1) ${delay}ms,
+                 opacity ${duration * 0.6}ms ease ${delay + duration * 0.4}ms;
+      will-change:transform,opacity;
+      line-height:1;
+      text-shadow: 0 2px 8px ${color}88;
+    `;
+    el.textContent = shape;
+    document.body.appendChild(el);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${rotate}deg) scale(${0.4 + Math.random() * 0.8})`;
+        el.style.opacity = '0';
+      });
+    });
+
+    setTimeout(() => el.remove(), duration + delay + 100);
+  }
+
+  // 카드 자체 펄스 효과
+  cardEl.style.transition = 'transform 0.15s ease';
+  cardEl.style.transform = 'scale(1.1)';
+  setTimeout(() => { cardEl.style.transform = ''; }, 200);
+}
+
 function selectCard(idx) {
   if (_blockSelect) return;
   document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-  document.getElementById(`card-${idx}`).classList.add('selected');
+  const cardEl = document.getElementById(`card-${idx}`);
+  cardEl.classList.add('selected');
   selectedCards[currentPage] = idx;
   document.getElementById('nextBtn').disabled = false;
+
+  // 1페이지(색 선택)에서만 파티클 효과
+  if (currentPage === 0) {
+    const label = pages[0].cards[idx].label;
+    triggerColorEffect(cardEl, label);
+  }
 }
 
 function nextPage() {
