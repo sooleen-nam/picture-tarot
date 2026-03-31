@@ -1134,8 +1134,57 @@ function nextPage() {
 
 function startQuizWithNickname() {
   const input = document.getElementById('nicknameInput');
-  if (input) saveNickname(input.value);
+  const name = input ? input.value.trim() : '';
+  if (!name) {
+    showNicknameAlert();
+    if (input) input.focus();
+    return;
+  }
+  saveNickname(name);
   startQuiz();
+}
+
+function showNicknameAlert() {
+  if (document.getElementById('nickname-alert')) return;
+  const el = document.createElement('div');
+  el.id = 'nickname-alert';
+  el.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.88);
+    background:#fff;border-radius:24px;padding:36px 32px 28px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.18);z-index:9999;
+    text-align:center;width:300px;
+    opacity:0;transition:all 0.22s cubic-bezier(.34,1.56,.64,1);
+  `;
+  el.innerHTML = `
+    <div style="font-size:44px;margin-bottom:14px;">🥺</div>
+    <p style="font-size:1rem;font-weight:700;color:#2a2a4a;line-height:1.6;margin-bottom:22px;">
+      당신을 더 친근하게 부르고 싶어요.<br>닉네임을 써주세요!
+    </p>
+    <button onclick="closeNicknameAlert()" style="
+      background:linear-gradient(135deg,#a0a0e8,#7878c8);color:#fff;border:none;
+      border-radius:14px;padding:12px 32px;font-size:0.95rem;font-weight:700;
+      cursor:pointer;font-family:inherit;
+    ">닉네임 쓰러 가기</button>
+  `;
+  const overlay = document.createElement('div');
+  overlay.id = 'nickname-alert-overlay';
+  overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.25);z-index:9998;backdrop-filter:blur(2px);`;
+  overlay.onclick = closeNicknameAlert;
+  document.body.appendChild(overlay);
+  document.body.appendChild(el);
+  requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+}
+
+function closeNicknameAlert() {
+  const el = document.getElementById('nickname-alert');
+  const overlay = document.getElementById('nickname-alert-overlay');
+  if (el) { el.style.opacity='0'; el.style.transform='translate(-50%,-50%) scale(0.88)'; setTimeout(()=>el.remove(),220); }
+  if (overlay) overlay.remove();
+  const input = document.getElementById('nicknameInput');
+  if (input) input.focus();
 }
 
 function startQuiz() {
