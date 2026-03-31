@@ -1252,15 +1252,49 @@ function selectCard(idx) {
     const label = pages[0].cards[idx].label;
     triggerColorEffect(cardEl, label);
   }
-  // 2페이지(도형 선택) 도형 효과
+  // 2페이지(도형 선택) 응원 팝업
   if (currentPage === 1) {
-    const label = pages[1].cards[idx].label;
-    triggerShapeEffect(cardEl, label);
+    showCheerPopup('좋아요! 잘 고르고 있어요!\n점점 더 당신을 알아가는 중이에요!');
   }
 }
 
-/* ── 도형 카드 효과 ── */
-function triggerShapeEffect(cardEl, label) {
+function showCheerPopup(msg) {
+  const existing = document.getElementById('cheer-popup');
+  if (existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.id = 'cheer-popup';
+  el.style.cssText = `
+    position:fixed; top:50%; left:50%;
+    transform:translate(-50%,-50%) scale(0.8);
+    background:#fff; border-radius:24px;
+    padding:28px 36px; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.16);
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:17px; font-weight:700; color:#2a2a4a;
+    line-height:1.7; white-space:pre-line;
+    z-index:9999; pointer-events:none;
+    opacity:0;
+    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    border:2px solid #f0e8ff;
+  `;
+  el.textContent = msg;
+  document.body.appendChild(el);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translate(-50%,-50%) scale(1)';
+  }));
+
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translate(-50%,-50%) scale(0.9)';
+    setTimeout(() => el.remove(), 300);
+  }, 2300);
+}
+
+/* ── 도형 카드 효과 (제거됨) ── */
+function triggerShapeEffect(cardEl, label) { return; // 미사용
   const rect = cardEl.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
