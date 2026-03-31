@@ -1465,10 +1465,10 @@ function triggerItemEffect(cardEl, label) {
     if (c !== cardEl) { c.style.transition = 'opacity 0.3s ease'; c.style.opacity = '0.38'; }
   });
   // after pulse, show overlay with whoosh
-  setTimeout(() => { playItemSound('whoosh'); _showItemOverlay(label); }, 370);
+  setTimeout(() => { playItemSound('whoosh'); _showItemOverlay(label, cardEl); }, 370);
 }
 
-function _showItemOverlay(label) {
+function _showItemOverlay(label, srcCardEl) {
   _closeItemOverlayOnly();
   const meta = _itemMeta[label] || { emoji:'✨', accent:'#64748B', bg:'linear-gradient(135deg,#f1f5f9,#e2e8f0)' };
 
@@ -1488,7 +1488,7 @@ function _showItemOverlay(label) {
   const card = document.createElement('div');
   card.style.cssText = `
     background:${meta.bg};
-    border-radius:32px; padding:52px 68px 44px;
+    border-radius:32px; padding:48px 60px 40px;
     display:flex; flex-direction:column; align-items:center; gap:16px;
     box-shadow:0 28px 72px rgba(0,0,0,0.28), 0 0 0 2px ${meta.accent}44;
     transform:scale(0.2) rotate(-10deg); opacity:0;
@@ -1496,10 +1496,22 @@ function _showItemOverlay(label) {
     pointer-events:none; position:relative; overflow:visible;
   `;
 
+  // 선택한 카드의 실제 이미지를 복제해서 표시
   const emojiEl = document.createElement('div');
   emojiEl.id = 'item-center-emoji';
-  emojiEl.style.cssText = 'font-size:92px; line-height:1; user-select:none; position:relative; z-index:2; transition:transform 0.3s ease;';
-  emojiEl.textContent = meta.emoji;
+  emojiEl.style.cssText = 'width:160px; height:160px; display:flex; align-items:center; justify-content:center; position:relative; z-index:2; transition:transform 0.3s ease; user-select:none;';
+
+  const srcImg = srcCardEl ? srcCardEl.querySelector('img') : null;
+  if (srcImg && srcImg.complete && srcImg.naturalWidth > 0) {
+    const clonedImg = srcImg.cloneNode(false);
+    clonedImg.style.cssText = 'width:160px; height:160px; object-fit:contain; pointer-events:none; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.18));';
+    emojiEl.appendChild(clonedImg);
+  } else {
+    // 이미지 로딩 전이거나 에러인 경우 폴백
+    emojiEl.style.fontSize = '92px';
+    emojiEl.style.lineHeight = '1';
+    emojiEl.textContent = meta.emoji;
+  }
 
   const labelEl = document.createElement('div');
   labelEl.style.cssText = `font-size:26px; font-weight:700; color:${meta.accent}; font-family:'MapleStory','Pretendard',sans-serif; letter-spacing:0.04em;`;
