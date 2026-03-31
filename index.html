@@ -1485,47 +1485,36 @@ function _showItemOverlay(label, srcCardEl) {
   `;
   overlay.onclick = () => dismissItemEffect();
 
-  const card = document.createElement('div');
-  card.style.cssText = `
-    background:${meta.bg};
-    border-radius:32px; padding:48px 60px 40px;
-    display:flex; flex-direction:column; align-items:center; gap:16px;
-    box-shadow:0 28px 72px rgba(0,0,0,0.28), 0 0 0 2px ${meta.accent}44;
-    transform:scale(0.2) rotate(-10deg); opacity:0;
-    transition:transform 0.48s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.35s ease;
-    pointer-events:none; position:relative; overflow:visible;
-  `;
-
-  // 선택한 카드의 실제 이미지를 복제해서 표시
+  // 이미지만 직접 중앙에 띄움 (카드 컨테이너 없음)
   const emojiEl = document.createElement('div');
   emojiEl.id = 'item-center-emoji';
-  emojiEl.style.cssText = 'width:160px; height:160px; display:flex; align-items:center; justify-content:center; position:relative; z-index:2; transition:transform 0.3s ease; user-select:none;';
+  emojiEl.style.cssText = `
+    width:220px; height:220px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:2;
+    user-select:none; pointer-events:none;
+    transform:scale(0.15) rotate(-10deg); opacity:0;
+    transition:transform 0.48s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.35s ease;
+  `;
 
-  const srcImg = srcCardEl ? srcCardEl.querySelector('img') : null;
+  const srcImg = srcCardEl ? srcCardEl.querySelector('.card-img-wrap img') : null;
   if (srcImg && srcImg.complete && srcImg.naturalWidth > 0) {
     const clonedImg = srcImg.cloneNode(false);
-    clonedImg.style.cssText = 'width:160px; height:160px; object-fit:contain; pointer-events:none; filter:drop-shadow(0 8px 24px rgba(0,0,0,0.18));';
+    clonedImg.style.cssText = 'width:220px; height:220px; object-fit:contain; pointer-events:none; filter:drop-shadow(0 12px 32px rgba(0,0,0,0.28));';
     emojiEl.appendChild(clonedImg);
   } else {
-    // 이미지 로딩 전이거나 에러인 경우 폴백
-    emojiEl.style.fontSize = '92px';
+    emojiEl.style.fontSize = '100px';
     emojiEl.style.lineHeight = '1';
     emojiEl.textContent = meta.emoji;
   }
 
-  const labelEl = document.createElement('div');
-  labelEl.style.cssText = `font-size:26px; font-weight:700; color:${meta.accent}; font-family:'MapleStory','Pretendard',sans-serif; letter-spacing:0.04em;`;
-  labelEl.textContent = label;
-
-  card.appendChild(emojiEl);
-  card.appendChild(labelEl);
-  overlay.appendChild(card);
+  overlay.appendChild(emojiEl);
   document.body.appendChild(overlay);
 
   requestAnimationFrame(() => requestAnimationFrame(() => {
     overlay.style.opacity = '1';
-    card.style.transform = 'scale(1) rotate(0deg)';
-    card.style.opacity = '1';
+    emojiEl.style.transform = 'scale(1) rotate(0deg)';
+    emojiEl.style.opacity = '1';
   }));
 
   setTimeout(() => { _triggerItemSpecific(emojiEl, label); }, 520);
@@ -1533,6 +1522,8 @@ function _showItemOverlay(label, srcCardEl) {
 }
 
 function _triggerItemSpecific(emojiEl, label) {
+  // 입장 애니메이션 끝난 후 개별 효과용 transition으로 교체
+  emojiEl.style.transition = 'transform 0.3s ease, filter 0.3s ease';
   const cx = window.innerWidth / 2;
   const cy = window.innerHeight / 2;
 
