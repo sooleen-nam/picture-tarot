@@ -154,7 +154,40 @@
     .card.selected .check-badge { display: flex; }
 
     /* ── 버튼 ── */
-    .btn-wrap { display: flex; justify-content: center; }
+    .btn-wrap { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn-hist {
+      padding: 12px 32px; font-size: 0.95rem; font-weight: 700;
+      border: 2px solid #3196FF; border-radius: 50px;
+      background: #fff; color: #3196FF; cursor: pointer;
+      transition: all 0.2s; letter-spacing: 0.04em;
+    }
+    .btn-hist:hover { background: #3196FF; color: #fff; }
+
+    /* ── 기록 화면 ── */
+    .history-screen { padding: 24px 20px 60px; max-width: 700px; margin: 0 auto; }
+    .history-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+    .history-title { font-size: 1.4rem; font-weight: 800; color: #2a3a50; }
+    .hist-count { font-size: 0.85rem; color: #7890a8; margin-bottom: 16px; }
+    .hist-btn {
+      padding: 8px 16px; font-size: 0.82rem; font-weight: 700;
+      border: 1.5px solid #3196FF; border-radius: 20px;
+      background: #fff; color: #3196FF; cursor: pointer; transition: all 0.18s;
+    }
+    .hist-btn:hover { background: #3196FF; color: #fff; }
+    .hist-btn-dl { border-color: #24BEF0; color: #24BEF0; }
+    .hist-btn-dl:hover { background: #24BEF0; color: #fff; }
+    .hist-btn-clear { border-color: #ff6b6b; color: #ff6b6b; }
+    .hist-btn-clear:hover { background: #ff6b6b; color: #fff; }
+    .hist-list { display: flex; flex-direction: column; gap: 10px; }
+    .hist-row {
+      background: #fff; border-radius: 14px;
+      padding: 14px 18px; box-shadow: 0 2px 10px rgba(49,150,255,0.08);
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+    }
+    .hist-date { font-size: 0.78rem; color: #9aabbb; flex-shrink: 0; }
+    .hist-type { font-size: 1rem; font-weight: 700; color: #2a3a50; }
+    .hist-cards { font-size: 0.8rem; color: #7890a8; flex: 1 1 100%; margin-top: 2px; }
+
     .btn {
       padding: 16px 56px; font-size: 1.1rem; font-weight: 700;
       border: none; border-radius: 50px;
@@ -906,10 +939,97 @@ function getTodayFortune(typeKey, picks) {
   return { number, luckyTime, luckyMsg, luckyItem };
 }
 
+/* ── 로컬 저장 ── */
+const STORAGE_KEY = 'pictureTarotHistory';
+
+function saveResult(r) {
+  const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const entry = {
+    date: dateStr,
+    resultKey: r.key,
+    resultTitle: r.title,
+    resultEmoji: r.emoji || '',
+    selectedCardLabels: selectedCards.map((cardIdx, pageIdx) => pages[pageIdx].cards[cardIdx].label),
+    scores: { ...totalScores },
+  };
+  history.unshift(entry); // 최신 순
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+}
+
+function getHistory() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+
+function downloadCSV() {
+  const history = getHistory();
+  if (!history.length) { alert('저장된 기록이 없습니다.'); return; }
+  const headers = ['날짜', '결과 유형', '선택한 카드들', '에너지', '창의성', '안정', '사교성', '리더십', '자유', '감수성', '분석'];
+  const rows = history.map(h => [
+    h.date,
+    h.resultTitle,
+    (h.selectedCardLabels || []).join(' / '),
+    h.scores.energy || 0,
+    h.scores.creativity || 0,
+    h.scores.stability || 0,
+    h.scores.social || 0,
+    h.scores.leadership || 0,
+    h.scores.freedom || 0,
+    h.scores.sensitivity || 0,
+    h.scores.analytical || 0,
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `그림타로_기록_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function renderHistory() {
+  setBg(introBg);
+  hideCloudBg();
+  const history = getHistory();
+  const listHTML = history.length === 0
+    ? `<p style="text-align:center;color:#aaa;padding:40px 0;">아직 기록이 없어요</p>`
+    : history.map((h, i) => `
+      <div class="hist-row">
+        <div class="hist-date">${h.date}</div>
+        <div class="hist-type">${h.resultTitle}</div>
+        <div class="hist-cards">${(h.selectedCardLabels || []).join(' · ')}</div>
+      </div>`).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="history-screen">
+      <div class="history-header">
+        <h2 class="history-title">📋 내 기록</h2>
+        <div style="display:flex;gap:10px;">
+          <button class="hist-btn hist-btn-dl" onclick="downloadCSV()">CSV 다운로드</button>
+          <button class="hist-btn hist-btn-clear" onclick="clearHistory()">기록 삭제</button>
+          <button class="hist-btn" onclick="renderIntro()">← 돌아가기</button>
+        </div>
+      </div>
+      <div class="hist-count">${history.length}개의 기록</div>
+      <div class="hist-list">${listHTML}</div>
+    </div>`;
+}
+
+function clearHistory() {
+  if (!confirm('모든 기록을 삭제할까요?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderHistory();
+}
+
 /* ── 렌더 함수 ── */
 function renderIntro() {
   setBg(introBg);
   showCloudBg();
+  const history = getHistory();
+  const histBtn = history.length > 0
+    ? `<button class="btn btn-hist" onclick="renderHistory()">내 기록 보기 (${history.length})</button>`
+    : '';
   document.getElementById('app').innerHTML = `
     <div class="intro">
       <img class="intro-logo" src="images/character/RGB(웹용)_png_Signature_A타입(2도)_컬러.png" alt="로고"/>
@@ -924,6 +1044,7 @@ function renderIntro() {
           </p>
           <div class="btn-wrap">
             <button class="btn" onclick="startQuiz()">시작하기</button>
+            ${histBtn}
           </div>
           <div class="bonus-banner">
             <img class="bonus-img" src="images/character/보너스.png" alt="보너스"/>
@@ -1003,6 +1124,7 @@ function renderResult() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   hideCloudBg();
   const r = getResult();
+  saveResult(r);
   setBg(r.colors.bg);
 
   const c = r.colors;
