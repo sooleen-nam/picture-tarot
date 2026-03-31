@@ -1240,8 +1240,8 @@ function renderResult() {
       <div class="result-picks">${picksHTML}</div>
       <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}</div>
       <div class="tarot-section" style="border:2px solid ${c.c1}30; background:${c.kbg};">
-        <div class="tarot-title" style="color:${c.c1}">그림 타로! 오늘의 행운은?</div>
-        <p class="tarot-subtitle">카드를 한 장씩 뒤집어 보세요</p>
+        <div class="tarot-title" style="color:${c.c1}">${nickname ? nickname + '님만을 위한 그림 타로 카드!' : '그림 타로! 오늘의 행운은?'}</div>
+        <p class="tarot-subtitle">${nickname ? '오늘의 행운을 확인해보세요.' : '카드를 한 장씩 뒤집어 보세요'}</p>
         <div class="tarot-cards">
           <div class="tarot-card" id="tcard-0" onclick="flipTarot(0)">
             <div class="tarot-card-inner">
