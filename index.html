@@ -314,6 +314,13 @@
       background: #e0e0e0; border-radius: 3px;
     }
     .result-label { font-size: 0.82rem; color: #7878a8; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .result-nickname { font-size: 0.9rem; font-weight: 700; color: #5a5a8a; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .nickname-wrap { margin-bottom: 14px; text-align: center; }
+    .nickname-label { font-size: 0.82rem; color: #7878a8; display: block; margin-bottom: 8px; }
+    .nickname-row { display: flex; justify-content: center; }
+    .nickname-input { border: 2px solid #d8d8f0; border-radius: 20px; padding: 8px 18px; font-size: 0.95rem; font-family: inherit; color: #2a2a4a; outline: none; text-align: center; width: 180px; background: #fafaff; transition: border-color 0.2s; }
+    .nickname-input:focus { border-color: #a0a0e0; }
+    .nickname-input::placeholder { color: #b8b8d8; }
     .result-title {
       font-family: 'MapleStory', 'Pretendard', sans-serif;
       font-size: 2.5rem; font-weight: 900; margin-bottom: 14px; line-height: 1.2;
@@ -939,6 +946,16 @@ function getTodayFortune(typeKey, picks) {
   return { number, luckyTime, luckyMsg, luckyItem };
 }
 
+/* ── 닉네임 ── */
+const NICKNAME_KEY = 'pictureTarotNickname';
+
+function getNickname() {
+  return localStorage.getItem(NICKNAME_KEY) || '';
+}
+function saveNickname(name) {
+  localStorage.setItem(NICKNAME_KEY, name.trim());
+}
+
 /* ── 로컬 저장 ── */
 const STORAGE_KEY = 'pictureTarotHistory';
 
@@ -1026,10 +1043,7 @@ function clearHistory() {
 function renderIntro() {
   setBg(introBg);
   showCloudBg();
-  const history = getHistory();
-  const histBtn = history.length > 0
-    ? `<button class="btn btn-hist" onclick="renderHistory()">내 기록 보기 (${history.length})</button>`
-    : '';
+  const saved = getNickname();
   document.getElementById('app').innerHTML = `
     <div class="intro">
       <img class="intro-logo" src="images/character/RGB(웹용)_png_Signature_A타입(2도)_컬러.png" alt="로고"/>
@@ -1042,9 +1056,14 @@ function renderIntro() {
             마음이 가장 끌리는 것은 무엇인가요?<br>
             당신의 숨겨진 성향을 알려드릴게요!
           </p>
+          <div class="nickname-wrap">
+            <span class="nickname-label">어떤 닉네임으로 불러드릴까요?</span>
+            <div class="nickname-row">
+              <input class="nickname-input" id="nicknameInput" type="text" maxlength="10" placeholder="닉네임 입력" value="${saved}" />
+            </div>
+          </div>
           <div class="btn-wrap">
-            <button class="btn" onclick="startQuiz()">시작하기</button>
-            ${histBtn}
+            <button class="btn" onclick="startQuizWithNickname()">시작하기</button>
           </div>
           <div class="bonus-banner">
             <img class="bonus-img" src="images/character/보너스.png" alt="보너스"/>
@@ -1113,6 +1132,12 @@ function nextPage() {
   else renderPage(currentPage);
 }
 
+function startQuizWithNickname() {
+  const input = document.getElementById('nicknameInput');
+  if (input) saveNickname(input.value);
+  startQuiz();
+}
+
 function startQuiz() {
   currentPage = 0;
   selectedCards = [];
@@ -1147,6 +1172,9 @@ function renderResult() {
 
   const keywordsHTML = r.keywords.map(k => `<span class="keyword" style="${kwStyle}"># ${k}</span>`).join('');
 
+  const nickname = getNickname();
+  const nameTag = nickname ? `<div class="result-nickname">${nickname} 님의 유형은</div>` : `<div class="result-label">당신의 유형은</div>`;
+
   document.getElementById('app').innerHTML = `
     <div class="result">
       <div class="result-mobile-top">
@@ -1155,7 +1183,7 @@ function renderResult() {
       <div class="result-header">
         <img class="result-char-img" src="images/character/배경이미지2.webp" alt="캐릭터"/>
         <div class="result-memo">
-          <div class="result-label">당신의 유형은</div>
+          ${nameTag}
           <div class="result-title" style="${titleStyle}">${r.title}</div>
           <div class="keywords">${keywordsHTML}</div>
         </div>
