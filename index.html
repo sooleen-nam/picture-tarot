@@ -1043,7 +1043,6 @@ function clearHistory() {
 function renderIntro() {
   setBg(introBg);
   showCloudBg();
-  const saved = getNickname();
   document.getElementById('app').innerHTML = `
     <div class="intro">
       <img class="intro-logo" src="images/character/RGB(웹용)_png_Signature_A타입(2도)_컬러.png" alt="로고"/>
@@ -1059,7 +1058,7 @@ function renderIntro() {
           <div class="nickname-wrap">
             <span class="nickname-label">어떤 닉네임으로 불러드릴까요?</span>
             <div class="nickname-row">
-              <input class="nickname-input" id="nicknameInput" type="text" maxlength="10" placeholder="닉네임 입력" value="${saved}" />
+              <input class="nickname-input" id="nicknameInput" type="text" maxlength="10" placeholder="닉네임 입력" value="" />
             </div>
           </div>
           <div class="btn-wrap">
