@@ -391,7 +391,7 @@
     }
     .tarot-title {
       font-family: 'MapleStory', 'Pretendard', sans-serif;
-      font-size: 1rem; font-weight: 800;
+      font-size: 2rem; font-weight: 800;
       letter-spacing: 0.04em; margin-bottom: 6px;
     }
     .tarot-subtitle {
@@ -628,7 +628,7 @@
       .slot-card { width: 100px; height: 150px; }
       .slot-symbol { font-size: 1.8rem; }
       .slot-front-value { font-size: 0.88rem; }
-      .tarot-title { font-size: 0.88rem; }
+      .tarot-title { font-size: 1.5rem; }
       .tarot-section { padding: 16px 10px 16px; }
     }
 
@@ -981,7 +981,7 @@ function initTarotSpread() {
 
   spread.innerHTML = '';
 
-  const totalAngle = 160;
+  const totalAngle = 90;
   const startAngle = -totalAngle / 2;
   const step = totalAngle / (_TAROT_TOTAL - 1);
 
@@ -1936,7 +1936,6 @@ function renderResult() {
           <div class="keywords">${keywordsHTML}</div>
         </div>
       </div>
-      <p class="result-picks-title" style="color:${c.c1}">✦ 선택한 카드 다시보기 ✦</p>
       <div class="result-picks">${picksHTML}</div>
       <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}\n\n<span style="color:${c.c1};font-weight:800;">✦ 나와 닮은 연예인 : ${r.celeb.name}</span>\n${r.celeb.desc}</div>
       <div class="tarot-section" id="tarot-section"
