@@ -342,8 +342,37 @@
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 16px; padding: 22px 26px;
       font-size: 0.98rem; color: #4a5068;
-      line-height: 1.85; text-align: left; margin-bottom: 32px;
+      line-height: 1.85; text-align: left; margin-bottom: 20px;
       white-space: pre-line;
+    }
+    /* ── 닮은 연예인 박스 ── */
+    .celeb-box {
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px; padding: 20px;
+      text-align: center; margin-bottom: 32px;
+    }
+    .celeb-box-title {
+      font-size: 0.82rem; font-weight: 800;
+      letter-spacing: 0.06em; margin-bottom: 14px;
+    }
+    .celeb-img-wrap {
+      width: 96px; height: 96px;
+      border-radius: 50%; overflow: hidden;
+      margin: 0 auto 10px;
+      background: rgba(0,0,0,0.06);
+      border: 3px solid rgba(255,255,255,0.9);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .celeb-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+    }
+    .celeb-name {
+      font-size: 1rem; font-weight: 900; margin-bottom: 5px;
+    }
+    .celeb-desc {
+      font-size: 0.8rem; color: #7878a8; line-height: 1.6;
     }
     .result-picks-title {
       font-size: 1rem; font-weight: 700;
@@ -771,97 +800,113 @@ const resultTypes = [
   {
     key:'ERCF', title:'자유로운 마당발',
     keywords:['연결력','자유','창의','활발함','유연성'],
-    desc:'어디 가든 새 친구 만들고 아이디어 폭발! 🎉\n"나 이 사람 처음 봤는데 왜 이렇게 잘 맞지?" 하는 말 자주 듣죠?\n규칙? 그거 저한텐 좀... 자유롭게 가요!\n엉뚱한 것들을 연결해서 "오 이거 대박!"을 만드는 타입.\n당신 주변에 사람과 재미가 끊이지 않는 이유, 바로 당신이에요! ✨',
+    desc:'어디 가든 새 친구 만들고 아이디어 폭발! 🎉\n"나 이 사람 처음 봤는데 왜 이렇게 잘 맞지?" 하는 말 자주 듣죠?\n규칙? 그거 저한텐 좀... 자유롭게 가요! ✌️\n엉뚱한 것들을 연결해서 "오 이거 대박!"을 만드는 타입.\n지루한 자리도 당신이 오면 순식간에 파티로 변해버려요! 🎊\n어색한 공기도 몇 마디면 끝, 그 자연스러운 에너지가 최강 무기예요.\n당신 주변에 사람과 재미가 끊이지 않는 이유, 바로 당신이에요! ✨',
+    celeb:{ name:'유재석', wiki:'유재석', desc:'어디서든 분위기를 만들고 사람들을 연결하는 국민 MC!' },
     colors:{c1:'#E91E8C',c2:'#FF6FB2',kbg:'rgba(233,30,140,0.08)',kborder:'rgba(233,30,140,0.3)',ktext:'#C2185B',bg:'linear-gradient(135deg,#fff0f8,#ffe0f2,#fff5fa)'},
   },
   {
     key:'ERCM', title:'따뜻한 아티스트',
     keywords:['감수성','공감','창의성','따뜻함','표현력'],
-    desc:'감성 100%, 공감력 200%! 🎨\n말 한마디로 누군가의 하루를 바꿔버리는 마법사 타입이에요.\n"왜 이렇게 내 마음을 잘 알지?"라는 말, 자주 듣지 않나요?\n당신의 그림 하나, 글 한 줄이 누군가에겐 큰 위로예요.\n세상이 당신의 감성을 정말 필요로 하고 있어요! 💕',
+    desc:'감성 100%, 공감력 200%! 🎨\n말 한마디로 누군가의 하루를 바꿔버리는 마법사 타입이에요.\n"왜 이렇게 내 마음을 잘 알지?"라는 말, 자주 듣지 않나요?\n당신의 그림 하나, 글 한 줄이 누군가에겐 정말 큰 위로예요.\n사람들과 함께하면서도 나만의 독특한 색깔을 잃지 않는 게 대단해요! 🌈\n그 따뜻한 창의력이 주변을 더 아름답게 만들어요.\n세상이 당신의 감성을 정말 필요로 하고 있어요! 💕',
+    celeb:{ name:'아이유', wiki:'아이유', desc:'섬세한 감성으로 온 세상의 마음을 따뜻하게 만드는 아티스트!' },
     colors:{c1:'#AD1457',c2:'#F06292',kbg:'rgba(173,20,87,0.08)',kborder:'rgba(173,20,87,0.3)',ktext:'#880E4F',bg:'linear-gradient(135deg,#fff0f5,#fce4ec,#fff5f8)'},
   },
   {
     key:'ERLF', title:'열정적인 리더',
     keywords:['추진력','개방성','사교력','도전','열정'],
-    desc:'에너지 과부하 주의보! ⚡\n낯선 곳도 "오히려 좋아~" 하는 신나는 타입!\n어디서든 분위기 메이커, 함께라면 뭐든 가능한 사람.\n"저 사람만 오면 왜 이렇게 재밌지?" 그게 바로 당신이에요.\n가는 곳마다 새 역사를 쓰는 열정 가득 리더! 🚀',
+    desc:'에너지 과부하 주의보! ⚡\n낯선 곳도 "오히려 좋아~" 하는 신나는 타입!\n어디서든 분위기 메이커, 함께라면 뭐든 가능한 사람.\n"저 사람만 오면 왜 이렇게 재밌지?" 그게 바로 당신이에요.\n새로운 도전 앞에서 두려움보다 설렘이 먼저 찾아오는 귀한 타입! 🚀\n그 에너지로 사람들을 이끌고 꿈을 현실로 만들어가요.\n가는 곳마다 새 역사를 쓰는 열정 가득 리더! 🔥',
+    celeb:{ name:'나영석', wiki:'나영석', desc:'끝없는 창의력과 추진력으로 새 역사를 쓰는 열정 리더!' },
     colors:{c1:'#E64A19',c2:'#FF7043',kbg:'rgba(230,74,25,0.08)',kborder:'rgba(230,74,25,0.3)',ktext:'#BF360C',bg:'linear-gradient(135deg,#fff8f5,#fbe9e7,#fffaf8)'},
   },
   {
     key:'ERLM', title:'인기있는 인플루언서',
     keywords:['카리스마','공감력','영향력','감성','추진력'],
-    desc:'눈빛 하나로 마음을 읽는 능력자! 👀\n공감하면서도 결정적인 순간엔 딱! 결단하는 타입.\n"저 사람 말하면 왠지 다들 고개를 끄덕이더라"가 바로 당신.\n따뜻하지만 강한, 자연스럽게 사람들이 따르는 리더!\n그 매력, 절대 잃지 마세요! ✨',
+    desc:'눈빛 하나로 마음을 읽는 능력자! 👀\n공감하면서도 결정적인 순간엔 딱! 결단하는 타입.\n"저 사람 말하면 왠지 다들 고개를 끄덕이더라"가 바로 당신.\n따뜻하지만 강한, 자연스럽게 사람들이 따르는 스타일! ✨\n감성과 리더십이 동시에 폭발하는 희귀 조합이에요.\n주변 사람들에게 영향을 주면서도 그들을 진심으로 아끼는 사람.\n그 매력, 절대 잃지 마세요! 💫',
+    celeb:{ name:'강호동', wiki:'강호동', desc:'폭발적 에너지와 따뜻한 공감으로 모두를 사로잡는 엔터테이너!' },
     colors:{c1:'#C62828',c2:'#EF5350',kbg:'rgba(198,40,40,0.08)',kborder:'rgba(198,40,40,0.3)',ktext:'#B71C1C',bg:'linear-gradient(135deg,#fff5f5,#ffebee,#fff8f8)'},
   },
   {
     key:'EACF', title:'아이디어 탐험가',
     keywords:['혁신','논리','모험','자유','행동력'],
-    desc:'머리 좋고 행동 빠른 탐험가! 🗺️\n남들이 "어 이게 되네?" 할 때 당신은 이미 다음 스텝.\n계획은 치밀하게, 실행은 번개처럼!\n세상 어디든 당신의 탐험 무대가 될 수 있어요.\n두려움? 그게 뭔데 먹는 건가요? 계속 나아가요! 💨',
+    desc:'머리 좋고 행동 빠른 탐험가! 🗺️\n남들이 "어 이게 되네?" 할 때 당신은 이미 다음 스텝.\n계획은 치밀하게, 실행은 번개처럼! ⚡\n세상 어디든 당신의 탐험 무대가 될 수 있어요.\n기존 방식을 의심하고 더 나은 길을 찾아내는 능력이 탁월해요.\n두려움? 그게 뭔데 먹는 건가요? 오히려 기회로 바꿔버리는 타입! 💨\n계속 나아가세요, 세상이 당신의 발견을 기다리고 있어요!',
+    celeb:{ name:'봉준호', wiki:'봉준호', desc:'경계를 허무는 창의적 발상으로 전 세계를 놀라게 한 감독!' },
     colors:{c1:'#E65100',c2:'#FF9800',kbg:'rgba(230,81,0,0.08)',kborder:'rgba(230,81,0,0.3)',ktext:'#BF360C',bg:'linear-gradient(135deg,#fff8f0,#fff3e0,#fffbf5)'},
   },
   {
     key:'EACM', title:'번쩍 발명왕',
     keywords:['분석력','창의력','열정','섬세함','독창성'],
-    desc:'아이디어가 폭발하는 에너지 덩어리! 💡\n문제 보면 열 가지 해법이 동시에 떠오르는 사람.\n감성까지 풍부해서 "이 사람 천재인데 왜 이렇게 따뜻하지?" 소리 듣는 타입.\n당신의 아이디어 하나가 세상을 바꿀 수도 있어요.\n그 열정, 계속 불태우세요! 🔥',
+    desc:'아이디어가 폭발하는 에너지 덩어리! 💡\n문제 보면 열 가지 해법이 동시에 떠오르는 사람.\n감성까지 풍부해서 "이 사람 천재인데 왜 이렇게 따뜻하지?" 소리 듣는 타입.\n당신의 아이디어 하나가 세상을 바꿀 수도 있어요! 🌍\n분석하고, 느끼고, 또 만들어내는 그 삼박자가 정말 희귀해요.\n주변 사람들도 당신의 번쩍이는 생각에 영감을 받아요.\n그 열정, 계속 불태우세요! 🔥',
+    celeb:{ name:'RM', wiki:'RM (방탄소년단)', desc:'음악·철학·예술을 넘나드는 창의적 에너지의 아이콘!' },
     colors:{c1:'#6A1B9A',c2:'#AB47BC',kbg:'rgba(106,27,154,0.08)',kborder:'rgba(106,27,154,0.3)',ktext:'#4A148C',bg:'linear-gradient(135deg,#f8f0ff,#f3e5f5,#faf5ff)'},
   },
   {
     key:'EALF', title:'도전적인 전략가',
     keywords:['전략','결단력','행동력','자유','분석'],
-    desc:'결정하면 바로 GO! 망설임 없는 행동파! 🏃\n느리게 고민? NO. 빠른 판단, 바로 실행, 결과로 말해요.\n"저 사람 벌써 다 했어?" 그게 매날 당신 이야기죠.\n틀에 얽매이지 않고 자기만의 방식으로 판을 바꾸는 타입!\n그 결단력이 당신의 최강 무기예요! ⚡',
+    desc:'결정하면 바로 GO! 망설임 없는 행동파! 🏃\n느리게 고민? NO. 빠른 판단, 바로 실행, 결과로 말해요.\n"저 사람 벌써 다 했어?" 그게 매날 당신 이야기죠.\n틀에 얽매이지 않고 자기만의 방식으로 판을 바꾸는 타입! ⚡\n어떤 전략이든 세우면 반드시 실행으로 이어가는 힘이 있어요.\n실패해도 금방 털고 다시 뛰어드는 그 용기, 정말 멋있어요.\n그 결단력이 당신의 최강 무기예요! 🏆',
+    celeb:{ name:'손흥민', wiki:'손흥민', desc:'불굴의 도전과 전략적 움직임으로 세계 무대를 정복한 스타!' },
     colors:{c1:'#1565C0',c2:'#42A5F5',kbg:'rgba(21,101,192,0.08)',kborder:'rgba(21,101,192,0.3)',ktext:'#0D47A1',bg:'linear-gradient(135deg,#f0f5ff,#e3f2fd,#f5f8ff)'},
   },
   {
     key:'EALM', title:'카리스마 리더',
     keywords:['카리스마','분석력','결단','감성','리더십'],
-    desc:'분석력 + 카리스마 = 최강 조합! 👑\n데이터로 머리 굴리고, 감성으로 사람 마음 잡는 레어 타입.\n당신 옆에 있으면 "왠지 이 사람 믿어도 되겠다" 하는 느낌.\n어떤 상황에도 흔들리지 않는 든든한 중심!\n그 카리스마, 마음껏 발휘하세요! 💪',
+    desc:'분석력 + 카리스마 = 최강 조합! 👑\n데이터로 머리 굴리고, 감성으로 사람 마음 잡는 레어 타입.\n당신 옆에 있으면 "왠지 이 사람 믿어도 되겠다" 하는 느낌.\n어떤 상황에도 흔들리지 않는 든든한 중심! 💪\n냉철하게 판단하면서도 사람에 대한 따뜻함을 잃지 않아요.\n위기의 순간에 가장 빛나는 진짜 리더 타입이에요.\n그 카리스마, 마음껏 발휘하세요! 🌟',
+    celeb:{ name:'이병헌', wiki:'이병헌', desc:'압도적인 카리스마와 섬세한 감성을 동시에 갖춘 배우!' },
     colors:{c1:'#1A237E',c2:'#5C6BC0',kbg:'rgba(26,35,126,0.08)',kborder:'rgba(26,35,126,0.3)',ktext:'#0D1464',bg:'linear-gradient(135deg,#f0f0ff,#e8eaf6,#f5f5ff)'},
   },
   {
     key:'SRCF', title:'꿈꾸는 몽상가',
     keywords:['상상력','평온','연결','자유','유연성'],
-    desc:'겉은 조용, 속은 상상 폭발! 🌙\n머릿속엔 끝없는 세계가 펼쳐지는 몽글몽글 타입이에요.\n당신 옆에 있으면 왠지 모르게 마음이 편안해지는 느낌.\n그 평화로운 에너지가 실은 엄청난 힘을 가지고 있어요!\n당신만의 속도로, 충분히 꿈꿔도 돼요! 🌟',
+    desc:'겉은 조용, 속은 상상 폭발! 🌙\n머릿속엔 끝없는 세계가 펼쳐지는 몽글몽글 타입이에요.\n당신 옆에 있으면 왠지 모르게 마음이 편안해지는 느낌.\n그 평화로운 에너지가 실은 엄청난 힘을 가지고 있어요! 🌟\n자유롭게 꿈꾸고, 그 꿈을 조금씩 현실로 만들어가는 사람.\n틀에 박히지 않고 자신만의 속도로 세상을 탐험해요.\n당신만의 속도로, 충분히 꿈꿔도 돼요! ✨',
+    celeb:{ name:'박보검', wiki:'박보검', desc:'조용하지만 깊은 감성과 자유로운 상상력을 가진 배우!' },
     colors:{c1:'#00838F',c2:'#4DD0E1',kbg:'rgba(0,131,143,0.08)',kborder:'rgba(0,131,143,0.3)',ktext:'#006064',bg:'linear-gradient(135deg,#f0fffe,#e0f7fa,#f5ffff)'},
   },
   {
     key:'SRCM', title:'마음 치유자',
     keywords:['공감','감수성','치유','창의','따뜻함'],
-    desc:'세상에서 제일 따뜻한 사람! 🌿\n말 안 해도 먼저 알아채고, 작은 행동 하나로 마음을 녹여버리는 타입.\n"왜 얘 옆에 있으면 이렇게 위로가 되지?" 그게 당신이에요.\n지치고 힘든 사람들이 제일 먼저 찾는 사람!\n그 따뜻함, 세상이 정말 필요로 해요! 🌸',
+    desc:'세상에서 제일 따뜻한 사람! 🌿\n말 안 해도 먼저 알아채고, 작은 행동 하나로 마음을 녹여버리는 타입.\n"왜 얘 옆에 있으면 이렇게 위로가 되지?" 그게 당신이에요.\n지치고 힘든 사람들이 제일 먼저 찾는 사람! 🌸\n공감 능력이 워낙 좋아서 상대방의 감정을 내 것처럼 느껴요.\n그 따뜻함이 당신의 창의력과 만나면 진짜 힐링 콘텐츠가 탄생해요.\n그 따뜻함, 세상이 정말 필요로 해요! 💚',
+    celeb:{ name:'박신혜', wiki:'박신혜', desc:'따뜻한 미소와 깊은 공감으로 많은 이들을 위로하는 배우!' },
     colors:{c1:'#2E7D32',c2:'#66BB6A',kbg:'rgba(46,125,50,0.08)',kborder:'rgba(46,125,50,0.3)',ktext:'#1B5E20',bg:'linear-gradient(135deg,#f0fff0,#e8f5e9,#f5fff5)'},
   },
   {
     key:'SRLF', title:'든든한 조력자',
     keywords:['신뢰','조화','사교','자유','지지'],
-    desc:'"내가 할게!" 한마디로 다들 안심시키는 사람! 🛡️\n말 없이 묵묵히 곁에서 이끌어주는 든든한 존재예요.\n관계를 소중히 하면서도 자유를 존중하는 쿨한 타입!\n조용한 리더십으로 팀의 중심을 잡아주는 역할,\n바로 당신이에요! 🌿',
+    desc:'"내가 할게!" 한마디로 다들 안심시키는 사람! 🛡️\n말 없이 묵묵히 곁에서 이끌어주는 든든한 존재예요.\n관계를 소중히 하면서도 자유를 존중하는 쿨한 타입!\n조용한 리더십으로 팀의 중심을 잡아주는 역할이에요. 🌿\n남이 힘들 때 말 없이 먼저 손 내미는 그 배려심, 정말 귀해요.\n함께라면 어디서든 잘 해낼 거라는 믿음을 주는 사람.\n바로 당신이에요! 💫',
+    celeb:{ name:'공유', wiki:'공유 (배우)', desc:'묵직한 신뢰감과 부드러운 카리스마로 곁을 지켜주는 배우!' },
     colors:{c1:'#558B2F',c2:'#9CCC65',kbg:'rgba(85,139,47,0.08)',kborder:'rgba(85,139,47,0.3)',ktext:'#33691E',bg:'linear-gradient(135deg,#f5fff0,#f1f8e9,#f8fff5)'},
   },
   {
     key:'SRLM', title:'따뜻한 수호자',
     keywords:['보호','공감','안정','헌신','따뜻함'],
-    desc:'아무것도 안 해도 옆에 있는 것만으로 힘이 되는 사람! 💜\n감성이 풍부해서 상대방이 말하기 전에 먼저 느끼는 타입.\n안정적이고 믿음직하면서도 따뜻한 마음이 넘쳐요.\n당신 덕분에 주변 사람들이 더 잘 버티고 있을지도 몰라요!\n그 헌신, 스스로도 꼭 아껴주세요! 💕',
+    desc:'아무것도 안 해도 옆에 있는 것만으로 힘이 되는 사람! 💜\n감성이 풍부해서 상대방이 말하기 전에 먼저 느끼는 타입.\n안정적이고 믿음직하면서도 따뜻한 마음이 넘쳐요.\n당신 덕분에 주변 사람들이 더 잘 버티고 있을지도 몰라요! 💕\n지키고 싶은 것에 대한 헌신이 정말 남다른 사람이에요.\n그 안정감과 따뜻함이 사람들을 저절로 끌어당겨요.\n그 헌신, 스스로도 꼭 아껴주세요! 🌺',
+    celeb:{ name:'이제훈', wiki:'이제훈', desc:'진중하고 따뜻한 눈빛으로 주변을 포근하게 감싸주는 배우!' },
     colors:{c1:'#4527A0',c2:'#9575CD',kbg:'rgba(69,39,160,0.08)',kborder:'rgba(69,39,160,0.3)',ktext:'#311B92',bg:'linear-gradient(135deg,#f5f0ff,#ede7f6,#f8f5ff)'},
   },
   {
     key:'SACF', title:'조용한 아이디어왕',
     keywords:['독창성','논리','자유','탐구','침착함'],
-    desc:'조용하지만 한 번 말하면 핵심 꿰뚫는 숨은 고수! 🎯\n아무도 생각 못 한 방법을 혼자 고민해서 꺼내오는 타입.\n자유롭게 생각하면서도 논리적으로 정리하는 드문 능력!\n세상이 아직 발견하지 못한 것들을 당신이 먼저 찾아낼 거예요.\n그 조용한 파워, 절대 과소평가 마세요! ✨',
+    desc:'조용하지만 한 번 말하면 핵심 꿰뚫는 숨은 고수! 🎯\n아무도 생각 못 한 방법을 혼자 고민해서 꺼내오는 타입.\n자유롭게 생각하면서도 논리적으로 정리하는 드문 능력!\n세상이 아직 발견하지 못한 것들을 당신이 먼저 찾아낼 거예요. 🔍\n사람 많은 곳보다 혼자 집중할 때 진짜 아이디어가 폭발해요.\n그 조용한 파워, 세상 밖으로 꺼내놓으면 다들 깜짝 놀랄 거예요!\n절대 과소평가 마세요! ✨',
+    celeb:{ name:'최우식', wiki:'최우식', desc:'조용하지만 깊은 곳에서 빛나는 독창적인 감성을 가진 배우!' },
     colors:{c1:'#00695C',c2:'#26A69A',kbg:'rgba(0,105,92,0.08)',kborder:'rgba(0,105,92,0.3)',ktext:'#004D40',bg:'linear-gradient(135deg,#f0fffe,#e0f2f1,#f5fffd)'},
   },
   {
     key:'SACM', title:'섬세한 사색가',
     keywords:['통찰력','감수성','논리','섬세함','깊이'],
-    desc:'겉은 잔잔, 속은 심오한 사색가! 🔭\n논리와 감성이 완벽하게 균형 잡힌 드문 타입이에요.\n사소한 것도 그냥 지나치지 않고 깊이 들여다봐요.\n"저 사람 얘기 들으면 왜 이렇게 생각이 정리되지?" 그게 당신!\n그 섬세한 통찰, 계속 빛내주세요! 💫',
+    desc:'겉은 잔잔, 속은 심오한 사색가! 🔭\n논리와 감성이 완벽하게 균형 잡힌 드문 타입이에요.\n사소한 것도 그냥 지나치지 않고 깊이 들여다봐요.\n"저 사람 얘기 들으면 왜 이렇게 생각이 정리되지?" 그게 당신! 💫\n혼자 있는 시간을 통해 더 깊이 성장하는 내면 부자예요.\n감성과 논리가 만나 만들어내는 인사이트가 정말 남달라요.\n그 섬세한 통찰, 계속 빛내주세요! 🌙',
+    celeb:{ name:'배수지', wiki:'배수지', desc:'섬세한 감성과 깊은 내면을 동시에 가진 다재다능한 아티스트!' },
     colors:{c1:'#283593',c2:'#7986CB',kbg:'rgba(40,53,147,0.08)',kborder:'rgba(40,53,147,0.3)',ktext:'#1A237E',bg:'linear-gradient(135deg,#f0f0ff,#e8eaf6,#f5f5ff)'},
   },
   {
     key:'SALF', title:'냉철한 마스터',
     keywords:['체계성','전략','자유','분석','실용주의'],
-    desc:'복잡한 건 딱 정리, 자유롭게 실행하는 냉철한 마스터! 🧩\n감정에 흔들리지 않고 논리와 원칙으로 판단하는 타입.\n엉키고 복잡한 상황도 당신이 오면 싹 정리돼요.\n당신이 만들어 놓은 구조 위에서 사람들이 더 잘 움직일 수 있어요!\n그 냉철함, 진짜 대단한 능력이에요! 🎖️',
+    desc:'복잡한 건 딱 정리, 자유롭게 실행하는 냉철한 마스터! 🧩\n감정에 흔들리지 않고 논리와 원칙으로 판단하는 타입.\n엉키고 복잡한 상황도 당신이 오면 싹 정리돼요.\n당신이 만들어 놓은 구조 위에서 사람들이 더 잘 움직일 수 있어요! 🎖️\n자유롭게 생각하되, 실행은 언제나 체계적으로!\n당신의 분석력이 진짜 힘을 발휘하는 순간이 반드시 와요.\n그 냉철함, 진짜 대단한 능력이에요! 💎',
+    celeb:{ name:'이정재', wiki:'이정재', desc:'냉철한 판단력과 완벽한 실행력으로 압도하는 배우!' },
     colors:{c1:'#37474F',c2:'#78909C',kbg:'rgba(55,71,79,0.08)',kborder:'rgba(55,71,79,0.3)',ktext:'#263238',bg:'linear-gradient(135deg,#f5f7f8,#eceff1,#f8f9fa)'},
   },
   {
     key:'SALM', title:'신뢰받는 현자',
     keywords:['통찰','안정','신뢰','감성','지혜'],
-    desc:'말수는 적어도 한 마디 한 마디가 금같은 사람! 🏛️\n분석력도 감성도 모두 뛰어난 레어 중의 레어 타입.\n결정이 느린 것 같아도 결국 가장 옳은 선택을 해요.\n힘들 때 가장 먼저 당신을 찾는 이유?\n바로 그 지혜와 안정감 때문이에요! 🌟',
+    desc:'말수는 적어도 한 마디 한 마디가 금같은 사람! 🏛️\n분석력도 감성도 모두 뛰어난 레어 중의 레어 타입.\n결정이 느린 것 같아도 결국 가장 옳은 선택을 해요.\n힘들 때 가장 먼저 당신을 찾는 이유? 🌟\n그 지혜와 안정감이 사람들에게 큰 위로가 되기 때문이에요.\n나이가 들수록 더욱 빛나는, 진짜 사람으로서의 깊이가 있어요.\n바로 그 지혜와 안정감 때문이에요! 🎋',
+    celeb:{ name:'최민식', wiki:'최민식', desc:'깊은 통찰과 압도적인 존재감으로 신뢰를 주는 배우!' },
     colors:{c1:'#4E342E',c2:'#8D6E63',kbg:'rgba(78,52,46,0.08)',kborder:'rgba(78,52,46,0.3)',ktext:'#3E2723',bg:'linear-gradient(135deg,#fdf5f0,#f3e5dc,#fdf8f5)'},
   },
 ];
@@ -999,7 +1044,7 @@ function pickTarotCard(idx, bg, c2) {
   // 안내 문구
   const inst = document.getElementById('tarot-instruction');
   if (inst) {
-    if (_tarotPickCount === 1) inst.textContent = '✦ 두 번째 카드를 골라주세요';
+    if (_tarotPickCount === 1) inst.innerHTML = '✦ 두 번째 카드를 골라주세요 <span style="font-size:0.78rem;color:#9898b8;">한 번 고르면 다시 바꿀 수 없으니 신중하게!</span>';
     else if (_tarotPickCount === 2) inst.textContent = '✦ 마지막 카드를 골라주세요';
     else {
       // 나머지 팬 카드 어둡게 (dimmed — 검정 아닌 색)
@@ -1915,6 +1960,14 @@ function renderResult() {
       <p class="result-picks-title" style="color:${c.c1}">✦ 선택한 카드 다시보기 ✦</p>
       <div class="result-picks">${picksHTML}</div>
       <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}</div>
+      <div class="celeb-box" id="celeb-box" style="border-color:${c.c1}20;">
+        <div class="celeb-box-title" style="color:${c.c1}">🌟 나와 닮은 연예인</div>
+        <div class="celeb-img-wrap" style="border-color:${c.c1}40;">
+          <img id="celeb-img" src="" alt="${r.celeb.name}" onerror="this.parentElement.style.display='none'"/>
+        </div>
+        <div class="celeb-name" style="color:${c.c1}">${r.celeb.name}</div>
+        <div class="celeb-desc">${r.celeb.desc}</div>
+      </div>
       <div class="tarot-section" id="tarot-section"
            data-color1="${c.c1}" data-color2="${c.c2}"
            data-lucky-time="${fortune.luckyTime.replace(/"/g,'&quot;')}"
@@ -1922,7 +1975,7 @@ function renderResult() {
            data-lucky-msg="${fortune.luckyMsg.replace(/"/g,'&quot;')}"
            style="border:2px solid ${c.c1}30; background:${c.kbg};">
         <div class="tarot-title" style="color:${c.c1}">${nickname ? nickname + '님만을 위한 그림 타로 카드!' : '그림 타로! 오늘의 행운은?'}</div>
-        <p class="tarot-subtitle">카드 20장 중 마음에 드는 3장을 골라보세요</p>
+        <p class="tarot-subtitle">카드 20장 중 마음에 드는 3장을 골라보세요<br><span style="font-size:0.78rem;color:#9898b8;">한 번 고르면 다시 바꿀 수 없으니 신중하게 선택하기!</span></p>
         <p class="tarot-instruction" id="tarot-instruction">✦ 첫 번째 카드를 골라주세요</p>
         <div class="tarot-fan-container" id="tarot-spread"></div>
         <div class="tarot-slots-row" id="tarot-slots-row">
@@ -1944,6 +1997,25 @@ function renderResult() {
     </div>`;
 
   initTarotSpread();
+  _loadCelebImage(r.celeb.wiki);
+}
+
+async function _loadCelebImage(wikiTitle) {
+  try {
+    const url = `https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
+    const resp = await fetch(url);
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const img = document.getElementById('celeb-img');
+    if (img && data.thumbnail && data.thumbnail.source) {
+      img.src = data.thumbnail.source;
+    } else if (img) {
+      img.parentElement.style.display = 'none';
+    }
+  } catch(e) {
+    const img = document.getElementById('celeb-img');
+    if (img) img.parentElement.style.display = 'none';
+  }
 }
 
 function showFeedbackModal() {
