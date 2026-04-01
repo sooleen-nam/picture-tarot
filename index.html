@@ -163,6 +163,36 @@
     }
     /* ── 버튼 ── */
     .btn-wrap { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    /* 결과 페이지 하단 고정 버튼 바 */
+    .result-btn-bar {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      height: 88px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+      z-index: 200;
+    }
+    .result-bar-btn {
+      flex: 1; height: 100%;
+      border: none; background: none; cursor: pointer;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .result-bar-btn:not(:last-child)::after {
+      content: ''; position: absolute; right: 0; top: 20%; height: 60%;
+      width: 1px; background: rgba(0,0,0,0.08);
+    }
+    .result-bar-btn:hover { background: rgba(0,0,0,0.04); }
+    .result-bar-btn:active { background: rgba(0,0,0,0.08); }
+    /* 결과 페이지 하단 바 공간 확보 */
+    .result-bottom-spacer { height: 100px; }
     .btn-hist {
       padding: 12px 32px; font-size: 0.95rem; font-weight: 700;
       border: 2px solid #3196FF; border-radius: 50px;
@@ -1961,11 +1991,12 @@ function renderResult() {
         </div>
       </div>
     </div>
-    <div class="btn-wrap" style="flex-direction:column;align-items:center;">
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="shareResult()">링크 공유하기</button>
-      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="saveResultImage()">결과 저장하기</button>
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="showFeedbackModal()">테스트 다시하기</button>
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="showTypesModal()">다른 유형 구경하기</button>
+    <div class="result-bottom-spacer"></div>
+    <div class="result-btn-bar">
+      <button class="result-bar-btn" style="color:${c.c1};" onclick="shareResult()">공유하기</button>
+      <button class="result-bar-btn" id="save-btn" style="color:${c.c1};" onclick="saveResultImage()">저장하기</button>
+      <button class="result-bar-btn" style="color:${c.c1};" onclick="showFeedbackModal()">다시하기</button>
+      <button class="result-bar-btn" style="color:${c.c1};" onclick="showTypesModal()">구경하기</button>
     </div>`;
 
   initTarotSpread();
@@ -2024,16 +2055,16 @@ function _showToast(msg) {
 /* ── 이미지 저장하기 ── */
 function saveResultImage() {
   const btn = document.getElementById('save-btn');
-  if (btn) { btn.textContent = '저장 중...'; btn.disabled = true; }
+  if (btn) { btn.textContent = '저장 중…'; btn.disabled = true; }
   const el = document.querySelector('.result');
-  if (!el) { if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; } return; }
+  if (!el) { if (btn) { btn.textContent = '저장하기'; btn.disabled = false; } return; }
   if (window.html2canvas) {
     _doCapture(el, btn);
   } else {
     const s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     s.onload = () => _doCapture(el, btn);
-    s.onerror = () => { alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'); if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; } };
+    s.onerror = () => { alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'); if (btn) { btn.textContent = '저장하기'; btn.disabled = false; } };
     document.head.appendChild(s);
   }
 }
@@ -2044,10 +2075,10 @@ function _doCapture(el, btn) {
     a.href = canvas.toDataURL('image/png');
     a.download = 'picture-tarot-result.png';
     a.click();
-    if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; }
+    if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
   }).catch(() => {
     alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
-    if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; }
+    if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
   });
 }
 
