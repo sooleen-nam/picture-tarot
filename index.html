@@ -1453,19 +1453,23 @@ const _itemMeta = {
 
 function triggerItemEffect(cardEl, label) {
   playItemSound('click');
-  const meta = _itemMeta[label] || { accent:'#64748b' };
-  // scale pulse: 1 → 1.05 → 1.1 → 1
-  cardEl.style.transition = 'transform 0.15s ease, box-shadow 0.3s ease';
-  cardEl.style.boxShadow = `0 8px 32px ${meta.accent}66, 0 0 0 3px ${meta.accent}`;
-  cardEl.style.transform = 'scale(1.05)';
-  setTimeout(() => { cardEl.style.transform = 'scale(1.1)'; }, 150);
-  setTimeout(() => { cardEl.style.transform = 'scale(1)'; }, 300);
-  // dim other cards
-  document.querySelectorAll('.card').forEach(c => {
-    if (c !== cardEl) { c.style.transition = 'opacity 0.3s ease'; c.style.opacity = '0.38'; }
-  });
-  // after pulse, show overlay with whoosh
-  setTimeout(() => { playItemSound('whoosh'); _showItemOverlay(label, cardEl); }, 370);
+  // 소리만 유지, 애니메이션 없음
+  setTimeout(() => {
+    playItemSound('whoosh');
+    _playItemSpecificSound(label);
+  }, 370);
+}
+
+function _playItemSpecificSound(label) {
+  switch (label) {
+    case '책':  playItemSound('pageflip'); break;
+    case '가방': playItemSound('zipper'); break;
+    case '우산': playItemSound('rain'); break;
+    case '시계': playItemSound('clock'); break;
+    case '의자': playItemSound('sit'); break;
+    case '신발': playItemSound('footstep'); break;
+    case '거울': playItemSound('glint'); break;
+  }
 }
 
 function _showItemOverlay(label, srcCardEl) {
