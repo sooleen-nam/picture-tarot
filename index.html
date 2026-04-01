@@ -2085,57 +2085,51 @@ function saveResultImage() {
   const nickname = getNickname();
   const f = _savedFortune || {};
 
-  // 저장용 카드 DOM 생성 (화면 밖)
-  const card = document.createElement('div');
-  card.style.cssText = [
-    'position:fixed', 'left:-9999px', 'top:0',
-    'width:390px', 'min-height:844px',
-    'background:' + c.bg,
-    'font-family:Pretendard,Apple SD Gothic Neo,sans-serif',
-    'color:#2a2a4a',
-    'box-sizing:border-box',
-    'padding:40px 28px 36px',
-    'display:flex', 'flex-direction:column', 'gap:0'
-  ].join(';');
-
   const kwHTML = r.keywords.map(k =>
-    `<span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;background:${c.kbg};border:1px solid ${c.kborder};color:${c.ktext};margin:3px 3px 0 0;"># ${k}</span>`
+    `<span style="display:inline-block;padding:4px 12px;border-radius:50px;font-size:0.8rem;font-weight:700;background:${c.kbg};border:1px solid ${c.kborder};color:${c.ktext};margin:3px 3px 0 0;"># ${k}</span>`
   ).join('');
 
-  const descLines = (r.desc + '\n\n✦ 나와 닮은 연예인 : ' + r.celeb.name + '\n' + r.celeb.desc)
-    .replace(/\n/g, '<br>');
+  const descText = r.desc + '\n\n✦ 나와 닮은 연예인 : ' + r.celeb.name + '\n' + r.celeb.desc;
 
-  card.innerHTML = `
-    <div style="text-align:center;margin-bottom:24px;">
-      <div style="font-size:0.75rem;color:#9898b8;letter-spacing:0.12em;margin-bottom:6px;">나는 어떤 사람일까?</div>
-      <div style="font-size:0.85rem;color:#7878a8;margin-bottom:10px;">${nickname ? nickname + ' 님의 유형은' : '당신의 유형은'}</div>
-      <div style="font-size:2rem;font-weight:900;background:linear-gradient(90deg,${c.c1},${c.c2});-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;margin-bottom:12px;">${r.title}</div>
-      <div>${kwHTML}</div>
+  // 저장용 페이지 DOM (화면 밖 390px 고정)
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:390px;background:' + c.bg + ';font-family:Pretendard,Apple SD Gothic Neo,Segoe UI,sans-serif;color:#2a2a4a;box-sizing:border-box;padding:36px 24px 32px;';
+
+  wrap.innerHTML = `
+    <!-- 헤더: 메모 카드 스타일 -->
+    <div style="background:#ffffff;border-radius:20px;padding:28px 24px 22px;box-shadow:0 6px 24px rgba(0,0,0,0.10),0 2px 6px rgba(0,0,0,0.06);position:relative;text-align:center;margin-bottom:22px;">
+      <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:36px;height:5px;background:#e0e0e0;border-radius:3px;"></div>
+      <div style="font-size:0.82rem;color:#7878a8;letter-spacing:0.08em;margin-bottom:4px;">${nickname ? nickname + ' 님의 유형은' : '당신의 유형은'}</div>
+      <div style="font-family:'MapleStory','Pretendard',sans-serif;font-size:2.2rem;font-weight:900;line-height:1.2;margin-bottom:14px;background:linear-gradient(90deg,${c.c1},${c.c2});-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">${r.title}</div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;">${kwHTML}</div>
     </div>
-    <div style="border-left:4px solid ${c.c1}60;background:rgba(255,255,255,0.55);border-radius:0 14px 14px 0;padding:18px 16px;font-size:0.82rem;line-height:1.85;color:#4a5068;white-space:normal;margin-bottom:22px;">${descLines}</div>
-    <div style="background:rgba(255,255,255,0.55);border:1.5px solid ${c.c1}30;border-radius:16px;padding:20px 18px;">
-      <div style="font-size:0.9rem;font-weight:900;color:${c.c1};margin-bottom:16px;text-align:center;letter-spacing:0.04em;">✨ 오늘의 그림 타로</div>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">☽ 오늘 행운이 찾아오는 시각은</div>
-          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyTime || '—'}</div>
+    <!-- 설명 -->
+    <div style="background:rgba(255,255,255,0.6);border:1px solid rgba(0,0,0,0.08);border-left:4px solid ${c.c1}40;border-radius:16px;padding:22px 20px;font-size:0.92rem;color:#4a5068;line-height:1.85;text-align:left;margin-bottom:20px;white-space:pre-line;font-family:Pretendard,'Apple SD Gothic Neo',sans-serif;">${descText}</div>
+    <!-- 그림 타로 행운 -->
+    <div style="border:2px solid ${c.c1}30;background:${c.kbg};border-radius:20px;padding:22px 20px;">
+      <div style="font-family:'MapleStory','Pretendard',sans-serif;font-size:1.2rem;font-weight:800;color:${c.c1};letter-spacing:0.04em;margin-bottom:18px;text-align:center;">✨ 오늘의 그림 타로</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="background:rgba(255,255,255,0.65);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;letter-spacing:0.04em;margin-bottom:6px;">☽ 오늘 행운이 찾아오는 시각은</div>
+          <div style="font-size:1rem;font-weight:800;color:${c.c1};">${f.luckyTime || '—'}</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">✦ 오늘 지녀야 할 행운 아이템은</div>
-          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyItem || '—'}</div>
+        <div style="background:rgba(255,255,255,0.65);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;letter-spacing:0.04em;margin-bottom:6px;">✦ 오늘 지녀야 할 행운 아이템은</div>
+          <div style="font-size:1rem;font-weight:800;color:${c.c1};">${f.luckyItem || '—'}</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">☀ 오늘의 행운 한마디</div>
-          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyMsg || '—'}</div>
+        <div style="background:rgba(255,255,255,0.65);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;letter-spacing:0.04em;margin-bottom:6px;">☀ 오늘의 행운 한마디</div>
+          <div style="font-size:1rem;font-weight:800;color:${c.c1};">${f.luckyMsg || '—'}</div>
         </div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:20px;font-size:0.68rem;color:#b0b8cc;letter-spacing:0.06em;">sooleen-nam.github.io/picture-tarot</div>`;
+    <!-- 푸터 -->
+    <div style="text-align:center;margin-top:22px;font-size:0.75rem;color:#a0a8bc;letter-spacing:0.04em;line-height:1.6;">아이스크림아트가 당신의 오늘을 응원합니다!</div>`;
 
-  document.body.appendChild(card);
+  document.body.appendChild(wrap);
 
-  const load = () => {
-    html2canvas(card, {
+  const doCapture = () => {
+    html2canvas(wrap, {
       scale: 3,
       useCORS: true,
       backgroundColor: null,
@@ -2143,27 +2137,27 @@ function saveResultImage() {
       scrollX: 0,
       scrollY: -window.scrollY
     }).then(canvas => {
-      document.body.removeChild(card);
+      document.body.removeChild(wrap);
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
       a.download = 'picture-tarot-result.png';
       a.click();
       if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
     }).catch(() => {
-      document.body.removeChild(card);
+      document.body.removeChild(wrap);
       alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
       if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
     });
   };
 
   if (window.html2canvas) {
-    load();
+    doCapture();
   } else {
     const s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = load;
+    s.onload = doCapture;
     s.onerror = () => {
-      document.body.removeChild(card);
+      document.body.removeChild(wrap);
       alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.');
       if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
     };
