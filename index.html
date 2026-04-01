@@ -991,6 +991,7 @@ function getResult() {
 
 /* ── 타로 카드 게임 (부채꼴 팬) ── */
 let _tarotPickCount = 0;
+let _savedFortune = null;
 const _TAROT_TOTAL = 20;
 const _TAROT_SYMBOLS = ['☽','✦','☀','★','♦','✿','❋','⚜','♠','❂','⊹','✵','⋆','∞','❃','◈','⟡','✤','◉','⌘'];
 
@@ -1935,6 +1936,7 @@ function renderResult() {
   const kwStyle = `background:${c.kbg};border:1px solid ${c.kborder};color:${c.ktext};`;
 
   const fortune = getTodayFortune(r.key, selectedCards);
+  _savedFortune = fortune;
 
   const picksHTML = selectedCards.map((cardIdx, pageIdx) => {
     const card = pages[pageIdx].cards[cardIdx];
@@ -2056,30 +2058,96 @@ function _showToast(msg) {
 function saveResultImage() {
   const btn = document.getElementById('save-btn');
   if (btn) { btn.textContent = '저장 중…'; btn.disabled = true; }
-  const el = document.querySelector('.result');
-  if (!el) { if (btn) { btn.textContent = '저장하기'; btn.disabled = false; } return; }
+
+  const r = getResult();
+  const c = r.colors;
+  const nickname = getNickname();
+  const f = _savedFortune || {};
+
+  // 저장용 카드 DOM 생성 (화면 밖)
+  const card = document.createElement('div');
+  card.style.cssText = [
+    'position:fixed', 'left:-9999px', 'top:0',
+    'width:390px', 'min-height:844px',
+    'background:' + c.bg,
+    'font-family:Pretendard,Apple SD Gothic Neo,sans-serif',
+    'color:#2a2a4a',
+    'box-sizing:border-box',
+    'padding:40px 28px 36px',
+    'display:flex', 'flex-direction:column', 'gap:0'
+  ].join(';');
+
+  const kwHTML = r.keywords.map(k =>
+    `<span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;background:${c.kbg};border:1px solid ${c.kborder};color:${c.ktext};margin:3px 3px 0 0;"># ${k}</span>`
+  ).join('');
+
+  const descLines = (r.desc + '\n\n✦ 나와 닮은 연예인 : ' + r.celeb.name + '\n' + r.celeb.desc)
+    .replace(/\n/g, '<br>');
+
+  card.innerHTML = `
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:0.75rem;color:#9898b8;letter-spacing:0.12em;margin-bottom:6px;">나는 어떤 사람일까?</div>
+      <div style="font-size:0.85rem;color:#7878a8;margin-bottom:10px;">${nickname ? nickname + ' 님의 유형은' : '당신의 유형은'}</div>
+      <div style="font-size:2rem;font-weight:900;background:linear-gradient(90deg,${c.c1},${c.c2});-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;margin-bottom:12px;">${r.title}</div>
+      <div>${kwHTML}</div>
+    </div>
+    <div style="border-left:4px solid ${c.c1}60;background:rgba(255,255,255,0.55);border-radius:0 14px 14px 0;padding:18px 16px;font-size:0.82rem;line-height:1.85;color:#4a5068;white-space:normal;margin-bottom:22px;">${descLines}</div>
+    <div style="background:rgba(255,255,255,0.55);border:1.5px solid ${c.c1}30;border-radius:16px;padding:20px 18px;">
+      <div style="font-size:0.9rem;font-weight:900;color:${c.c1};margin-bottom:16px;text-align:center;letter-spacing:0.04em;">✨ 오늘의 그림 타로</div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">☽ 오늘 행운이 찾아오는 시각은</div>
+          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyTime || '—'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">✦ 오늘 지녀야 할 행운 아이템은</div>
+          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyItem || '—'}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:0.72rem;color:#9898b8;font-weight:700;">☀ 오늘의 행운 한마디</div>
+          <div style="font-size:0.95rem;font-weight:800;color:${c.c1};">${f.luckyMsg || '—'}</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px;font-size:0.68rem;color:#b0b8cc;letter-spacing:0.06em;">sooleen-nam.github.io/picture-tarot</div>`;
+
+  document.body.appendChild(card);
+
+  const load = () => {
+    html2canvas(card, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: null,
+      width: 390,
+      scrollX: 0,
+      scrollY: -window.scrollY
+    }).then(canvas => {
+      document.body.removeChild(card);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'picture-tarot-result.png';
+      a.click();
+      if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
+    }).catch(() => {
+      document.body.removeChild(card);
+      alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
+      if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
+    });
+  };
+
   if (window.html2canvas) {
-    _doCapture(el, btn);
+    load();
   } else {
     const s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = () => _doCapture(el, btn);
-    s.onerror = () => { alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'); if (btn) { btn.textContent = '저장하기'; btn.disabled = false; } };
+    s.onload = load;
+    s.onerror = () => {
+      document.body.removeChild(card);
+      alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.');
+      if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
+    };
     document.head.appendChild(s);
   }
-}
-
-function _doCapture(el, btn) {
-  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = 'picture-tarot-result.png';
-    a.click();
-    if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
-  }).catch(() => {
-    alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
-    if (btn) { btn.textContent = '저장하기'; btn.disabled = false; }
-  });
 }
 
 /* ── 다른 유형 구경하기 팝업 ── */
