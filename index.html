@@ -353,35 +353,6 @@
       line-height: 1.85; text-align: left; margin-bottom: 20px;
       white-space: pre-line;
     }
-    /* ── 닮은 연예인 박스 ── */
-    .celeb-box {
-      background: rgba(255,255,255,0.65);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 16px; padding: 20px;
-      text-align: center; margin-bottom: 32px;
-    }
-    .celeb-box-title {
-      font-size: 0.82rem; font-weight: 800;
-      letter-spacing: 0.06em; margin-bottom: 14px;
-    }
-    .celeb-img-wrap {
-      width: 96px; height: 96px;
-      border-radius: 50%; overflow: hidden;
-      margin: 0 auto 10px;
-      background: rgba(0,0,0,0.06);
-      border: 3px solid rgba(255,255,255,0.9);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    }
-    .celeb-img-wrap img {
-      width: 100%; height: 100%; object-fit: cover;
-      display: block;
-    }
-    .celeb-name {
-      font-size: 1rem; font-weight: 900; margin-bottom: 5px;
-    }
-    .celeb-desc {
-      font-size: 0.8rem; color: #7878a8; line-height: 1.6;
-    }
     .result-picks-title {
       font-size: 1rem; font-weight: 700;
       color: #1a7ae0; margin-bottom: 20px;
@@ -1967,15 +1938,7 @@ function renderResult() {
       </div>
       <p class="result-picks-title" style="color:${c.c1}">✦ 선택한 카드 다시보기 ✦</p>
       <div class="result-picks">${picksHTML}</div>
-      <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}</div>
-      <div class="celeb-box" id="celeb-box" style="border-color:${c.c1}20;">
-        <div class="celeb-box-title" style="color:${c.c1}">🌟 나와 닮은 연예인</div>
-        <div class="celeb-img-wrap" style="border-color:${c.c1}40;">
-          <img id="celeb-img" src="" alt="${r.celeb.name}" onerror="this.parentElement.style.display='none'"/>
-        </div>
-        <div class="celeb-name" style="color:${c.c1}">${r.celeb.name}</div>
-        <div class="celeb-desc">${r.celeb.desc}</div>
-      </div>
+      <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}\n\n<span style="color:${c.c1};font-weight:800;">✦ 나와 닮은 연예인 : ${r.celeb.name}</span>\n${r.celeb.desc}</div>
       <div class="tarot-section" id="tarot-section"
            data-color1="${c.c1}" data-color2="${c.c2}"
            data-lucky-time="${fortune.luckyTime.replace(/"/g,'&quot;')}"
@@ -1983,7 +1946,7 @@ function renderResult() {
            data-lucky-msg="${fortune.luckyMsg.replace(/"/g,'&quot;')}"
            style="border:2px solid ${c.c1}30; background:${c.kbg};">
         <div class="tarot-title" style="color:${c.c1}">${nickname ? nickname + '님만을 위한 그림 타로 카드!' : '그림 타로! 오늘의 행운은?'}</div>
-        <p class="tarot-subtitle">카드 20장 중 마음에 드는 3장을 골라보세요<br><span style="font-size:0.78rem;color:#9898b8;">한 번 고르면 다시 바꿀 수 없으니 신중하게 선택하기!</span></p>
+        <p class="tarot-subtitle">카드 20장 중 마음에 드는 3장을 골라보세요<br>한 번 고르면 다시 바꿀 수 없으니 신중하게 선택하기!</p>
         <p class="tarot-instruction" id="tarot-instruction">✦ 첫 번째 카드를 골라주세요</p>
         <div class="tarot-fan-container" id="tarot-spread"></div>
         <div class="tarot-slots-row" id="tarot-slots-row">
@@ -2007,25 +1970,6 @@ function renderResult() {
     </div>`;
 
   initTarotSpread();
-  _loadCelebImage(r.celeb.wiki);
-}
-
-async function _loadCelebImage(wikiTitle) {
-  try {
-    const url = `https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
-    const resp = await fetch(url);
-    if (!resp.ok) return;
-    const data = await resp.json();
-    const img = document.getElementById('celeb-img');
-    if (img && data.thumbnail && data.thumbnail.source) {
-      img.src = data.thumbnail.source;
-    } else if (img) {
-      img.parentElement.style.display = 'none';
-    }
-  } catch(e) {
-    const img = document.getElementById('celeb-img');
-    if (img) img.parentElement.style.display = 'none';
-  }
 }
 
 function showFeedbackModal() {
