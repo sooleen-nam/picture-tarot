@@ -1162,6 +1162,15 @@ function renderPage(pageIdx) {
     </div>
     <h2 class="page-title">${page.title}</h2>
     <p class="page-subtitle">${page.subtitle}</p>
+    ${pageIdx === 2 ? `
+    <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:20px;">
+      <span style="font-size:1.1rem;">🔇</span>
+      <input type="range" min="0" max="1" step="0.05" value="${_itemVolume}"
+        style="width:160px;accent-color:#7878a8;cursor:pointer;"
+        oninput="_itemVolume=+this.value;document.getElementById('vol-pct').textContent=Math.round(this.value*100)+'%'"/>
+      <span style="font-size:1.1rem;">🔊</span>
+      <span id="vol-pct" style="font-size:0.85rem;color:#7878a8;min-width:36px;">${Math.round(_itemVolume*100)}%</span>
+    </div>` : ''}
     <div class="cards-grid">${cardsHTML}</div>
     <div class="btn-wrap">
       <button class="btn" id="nextBtn" onclick="nextPage()" disabled>
@@ -1332,6 +1341,7 @@ function showCheerPopup(msg) {
 // Page 3 (물건) 아이템 효과
 // ─────────────────────────────────────────────
 
+let _itemVolume = 1.0;
 let _audioCtx = null;
 function _getAC() {
   try {
@@ -1348,7 +1358,7 @@ function _playTone(freq, dur, type, vol) {
     osc.connect(gain); gain.connect(ac.destination);
     osc.type = type || 'sine';
     osc.frequency.setValueAtTime(freq, ac.currentTime);
-    gain.gain.setValueAtTime(vol || 0.25, ac.currentTime);
+    gain.gain.setValueAtTime((vol || 0.25) * _itemVolume, ac.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
     osc.start(); osc.stop(ac.currentTime + dur);
   } catch(e) {}
@@ -1364,7 +1374,7 @@ function _playNoise(dur, filterFreq, vol) {
     const flt = ac.createBiquadFilter(); flt.type = 'bandpass';
     flt.frequency.setValueAtTime(filterFreq, ac.currentTime); flt.Q.value = 2;
     const gain = ac.createGain();
-    gain.gain.setValueAtTime(vol || 0.1, ac.currentTime);
+    gain.gain.setValueAtTime((vol || 0.1) * _itemVolume, ac.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
     src.connect(flt); flt.connect(gain); gain.connect(ac.destination);
     src.start(); src.stop(ac.currentTime + dur);
@@ -1386,7 +1396,7 @@ function playItemSound(type) {
         flt.frequency.setValueAtTime(200, ac.currentTime);
         flt.frequency.exponentialRampToValueAtTime(3000, ac.currentTime + 0.45);
         flt.Q.value = 3;
-        const g = ac.createGain(); g.gain.setValueAtTime(0.22, ac.currentTime);
+        const g = ac.createGain(); g.gain.setValueAtTime(0.22 * _itemVolume, ac.currentTime);
         g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.45);
         src.connect(flt); flt.connect(g); g.connect(ac.destination);
         src.start(); src.stop(ac.currentTime + 0.45); break;
@@ -1401,7 +1411,7 @@ function playItemSound(type) {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(250, ac.currentTime);
         osc.frequency.linearRampToValueAtTime(2200, ac.currentTime + 0.5);
-        g.gain.setValueAtTime(0.1, ac.currentTime);
+        g.gain.setValueAtTime(0.1 * _itemVolume, ac.currentTime);
         g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.5);
         osc.start(); osc.stop(ac.currentTime + 0.5); break;
       }
