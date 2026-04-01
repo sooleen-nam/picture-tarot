@@ -392,8 +392,8 @@
     /* ── 타로 게임: 부채꼴 펼치기 ── */
     .tarot-fan-container {
       position: relative;
-      height: 260px;
-      margin: 0 auto 48px;
+      height: 280px;
+      margin: 0 auto 120px;
       overflow: visible;
     }
     /* 팬 카드 래퍼: 하단 중앙에서 회전 */
@@ -446,20 +446,20 @@
     }
     .tarot-slot-wrap { text-align: center; }
     .tarot-slot {
-      width: 88px; height: 132px;
+      width: 132px; height: 198px;
       border: 2px dashed rgba(120,120,168,0.3);
-      border-radius: 12px;
+      border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
       position: relative;
       transition: border-color 0.3s ease;
     }
     .tarot-slot .slot-empty-num {
-      font-size: 1.6rem; font-weight: 900;
+      font-size: 2.2rem; font-weight: 900;
       color: rgba(120,120,168,0.25);
     }
     /* 슬롯에 들어간 카드 */
     .slot-card {
-      width: 88px; height: 132px;
+      width: 132px; height: 198px;
       position: relative;
       perspective: 700px;
       cursor: default;
@@ -469,38 +469,38 @@
       width: 100%; height: 100%;
       transform-style: preserve-3d;
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 12px;
+      border-radius: 16px;
     }
     .slot-card.flipped .slot-card-inner { transform: rotateY(180deg); }
     .slot-face {
       position: absolute; inset: 0;
-      border-radius: 12px;
+      border-radius: 16px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 8px 7px;
     }
-    .slot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 12px 9px 9px; }
-    .slot-inner-border { position: absolute; inset: 6px; border-radius: 8px; pointer-events: none; }
-    .slot-symbol { font-size: 1.6rem; margin-bottom: 6px; line-height: 1; }
-    .slot-card-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
-    .slot-hint { font-size: 0.5rem; margin-top: 5px; opacity: 0.7; color: #fff; }
+    .slot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 16px 12px 12px; }
+    .slot-inner-border { position: absolute; inset: 8px; border-radius: 10px; pointer-events: none; }
+    .slot-symbol { font-size: 2.2rem; margin-bottom: 8px; line-height: 1; }
+    .slot-card-label { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
+    .slot-hint { font-size: 0.65rem; margin-top: 6px; opacity: 0.7; color: #fff; }
     .slot-front-q {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
-      font-size: 0.54rem; line-height: 1.65; text-align: center; color: #aaa; flex-shrink: 0;
+      font-size: 0.68rem; line-height: 1.65; text-align: center; color: #aaa; flex-shrink: 0;
     }
     .slot-value-wrap {
       flex: 1; display: flex; align-items: center; justify-content: center;
       border-top: 1px solid rgba(0,0,0,0.08);
-      margin-top: 8px; padding: 6px 2px 0; width: 100%;
+      margin-top: 10px; padding: 8px 4px 0; width: 100%;
     }
     .slot-front-value {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
-      font-size: 0.82rem; font-weight: 700; line-height: 1.45;
+      font-size: 1.05rem; font-weight: 700; line-height: 1.5;
       text-align: center; word-break: keep-all;
     }
-    .slot-name-label { font-size: 0.7rem; color: #aaa; margin-top: 7px; }
+    .slot-name-label { font-size: 0.8rem; color: #aaa; margin-top: 9px; }
     .tarot-instruction {
       font-size: 0.82rem; color: #7878a8; margin-bottom: 14px;
       font-weight: 600; min-height: 1.4em;
@@ -611,14 +611,14 @@
       }
 
       /* 타로 카드 */
-      .tarot-fan-container { height: 210px; margin-bottom: 52px; }
+      .tarot-fan-container { height: 220px; margin-bottom: 100px; }
       .spread-wrap { width: 56px; left: calc(50% - 28px); transform-origin: 28px 230px; }
       .fan-card-inner { width: 56px; height: 86px; }
       .fan-symbol { font-size: 0.95rem; }
-      .tarot-slot { width: 76px; height: 114px; }
-      .slot-card { width: 76px; height: 114px; }
-      .slot-symbol { font-size: 1.3rem; }
-      .slot-front-value { font-size: 0.72rem; }
+      .tarot-slot { width: 100px; height: 150px; }
+      .slot-card { width: 100px; height: 150px; }
+      .slot-symbol { font-size: 1.8rem; }
+      .slot-front-value { font-size: 0.88rem; }
       .tarot-title { font-size: 0.88rem; }
       .tarot-section { padding: 16px 10px 16px; }
     }
@@ -1310,7 +1310,7 @@ function renderIntro() {
             <img class="bonus-img" src="images/character/보너스.png" alt="보너스"/>
             <div class="bonus-text">
               보너스!<br>
-              두근두근 🔮행운의 그림 타로와 🧩퍼즐 게임까지!<br>
+              두근두근 🔮행운의 그림 타로까지!<br>
               내가 고른 카드로 즐겨보세요!
             </div>
           </div>
@@ -1939,11 +1939,10 @@ function renderResult() {
           </div>
         </div>
       </div>
-      <div class="btn-wrap">
-        <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="saveResultImage()">저장 하기</button>
-        <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showPuzzleModal()">퍼즐 게임</button>
-        <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">다시 하기</button>
-      </div>
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="saveResultImage()">저장 하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">다시 하기</button>
     </div>`;
 
   initTarotSpread();
@@ -2004,271 +2003,6 @@ function _doCapture(el, btn) {
   }).catch(() => {
     alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
     if (btn) { btn.textContent = '저장 하기'; btn.disabled = false; }
-  });
-}
-
-/* ── 퍼즐 게임 모달 ── */
-function showPuzzleModal() {
-  const overlay = document.createElement('div');
-  overlay.id = 'puzzle-modal-overlay';
-  overlay.className = 'modal-overlay';
-  overlay.innerHTML = `
-    <div class="modal-box" style="position:relative;text-align:center;">
-      <button onclick="document.getElementById('puzzle-modal-overlay').remove()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#aaa;line-height:1;" title="닫기">×</button>
-      <div style="font-size:2.4rem;margin-bottom:12px;">🧩</div>
-      <p style="font-size:1.05rem;font-weight:900;color:#2a2a4a;margin-bottom:10px;">당신이 선택한 카드가 퍼즐로 변했어요!</p>
-      <p style="font-size:0.88rem;color:#7878a8;line-height:1.8;margin-bottom:22px;">1분 안에 도전하며<br>집중의 즐거움을 느껴보세요.</p>
-      <button class="btn" onclick="startPuzzleGame()" style="width:100%;">시작하기</button>
-    </div>`;
-  document.body.appendChild(overlay);
-}
-
-function startPuzzleGame() {
-  const overlay = document.getElementById('puzzle-modal-overlay');
-  if (overlay) overlay.remove();
-  renderPuzzlePage();
-}
-
-/* ── 퍼즐 게임 페이지 ── */
-function renderPuzzlePage() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  const r = getResult();
-  const c = r.colors;
-
-  // 선택된 카드 키워드 4개 수집 (색, 도형, 물건, 동물/자연)
-  const pageLabels = selectedCards.map((ci, pi) => pages[pi].cards[ci].label);
-  const puzzleWords = pageLabels.slice(0, 4);
-
-  document.getElementById('app').innerHTML = `
-    <div id="puzzle-page" style="min-height:100vh;padding:16px;box-sizing:border-box;background:${c.bg};">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <button onclick="renderResult()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:${c.c1};">←</button>
-        <span style="font-size:1rem;font-weight:800;color:${c.c1};">🧩 퍼즐 게임</span>
-        <span style="margin-left:auto;font-size:0.8rem;color:#aaa;">키워드: ${puzzleWords.join(' · ')}</span>
-      </div>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
-        <!-- 왼쪽: 퍼즐 보드 + 세로 타이머 -->
-        <div style="display:flex;gap:10px;align-items:flex-start;">
-          <!-- 세로 타이머 바 -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
-            <span style="font-size:0.65rem;color:#aaa;">⏱</span>
-            <div id="timer-bar-wrap" style="width:12px;height:240px;background:rgba(0,0,0,0.08);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;">
-              <div id="timer-bar-fill" style="width:100%;height:100%;background:linear-gradient(to top,${c.c1},${c.c2});border-radius:6px;transition:height 1s linear;"></div>
-            </div>
-            <span id="timer-text" style="font-size:0.75rem;font-weight:900;color:${c.c1};">60</span>
-          </div>
-          <!-- 퍼즐 보드 -->
-          <div>
-            <div id="puzzle-board" style="
-              display:grid;grid-template-columns:repeat(3,90px);grid-template-rows:repeat(3,90px);
-              gap:3px;border:2px solid ${c.c1}40;border-radius:10px;overflow:hidden;
-              background:${c.kbg};padding:3px;
-            "></div>
-          </div>
-        </div>
-        <!-- 오른쪽: 미리보기 + 조각 팔레트 -->
-        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
-          <!-- 완성작 미리보기 -->
-          <div>
-            <div style="font-size:0.65rem;color:#aaa;margin-bottom:4px;text-align:center;">완성작</div>
-            <div id="puzzle-preview" style="
-              display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);
-              gap:1px;border:1.5px solid ${c.c1}40;border-radius:7px;overflow:hidden;background:${c.kbg};padding:2px;
-            "></div>
-          </div>
-          <!-- 조각 팔레트 -->
-          <div>
-            <div style="font-size:0.65rem;color:#aaa;margin-bottom:4px;text-align:center;">퍼즐 조각</div>
-            <div id="puzzle-pieces" style="
-              display:grid;grid-template-columns:repeat(3,56px);gap:5px;
-            "></div>
-          </div>
-        </div>
-      </div>
-      <div id="puzzle-result-msg" style="text-align:center;margin-top:18px;font-size:1rem;font-weight:800;color:${c.c1};min-height:28px;"></div>
-    </div>`;
-
-  _initPuzzle(c, puzzleWords);
-}
-
-function _initPuzzle(c, words) {
-  const COLS = 3, ROWS = 3, N = COLS * ROWS;
-  // 퍼즐 도안: SVG로 9칸 그림 생성 (단어 기반 이모지 매핑)
-  const emojiMap = {
-    '빨강':'🔴','주황':'🟠','노랑':'🟡','초록':'🟢','파랑':'🔵','보라':'🟣','분홍':'🩷','하늘':'🩵','검정':'⚫','흰색':'⚪',
-    '원':'⭕','삼각형':'🔺','사각형':'🟦','별':'⭐','하트':'❤️','마름모':'💠',
-    '책':'📚','가방':'👜','우산':'☂️','시계':'⏰','의자':'🪑','신발':'👟','거울':'🪞',
-    '새':'🐦','나비':'🦋','물고기':'🐟','고양이':'🐱','강아지':'🐶','토끼':'🐰','곰':'🐻','여우':'🦊','양':'🐑','사슴':'🦌','부엉이':'🦉',
-  };
-  const bgColors = {
-    '빨강':'#ffeeee','주황':'#fff3e0','노랑':'#fffde7','초록':'#e8f5e9','파랑':'#e3f2fd','보라':'#f3e5f5','분홍':'#fce4ec','하늘':'#e0f7fa','검정':'#f5f5f5','흰색':'#ffffff',
-  };
-  const mainEmoji = words.slice(1).map(w => emojiMap[w] || '✨').join('');
-  const bgColor = bgColors[words[0]] || '#f5f0ff';
-
-  // 9칸 퍼즐 셀 데이터 생성
-  const cellEmojis = [
-    words[0] ? (emojiMap[words[0]] || '🎨') : '🎨',
-    mainEmoji[0] || '🌟',
-    words[1] ? (emojiMap[words[1]] || '⭐') : '⭐',
-    mainEmoji[1] || '💫',
-    words[2] ? (emojiMap[words[2]] || '🌈') : '🌈',
-    mainEmoji[2] || '✨',
-    words[3] ? (emojiMap[words[3]] || '🎁') : '🎁',
-    mainEmoji[3] || '🌺',
-    '🎴',
-  ];
-
-  // 완성 순서 (0..8)
-  const solved = Array.from({length:N}, (_,i) => i);
-  // 섞기
-  const shuffled = [...solved].sort(() => Math.random() - 0.5);
-
-  // 완성작 미리보기 렌더
-  const preview = document.getElementById('puzzle-preview');
-  if (preview) {
-    preview.innerHTML = '';
-    solved.forEach(idx => {
-      const cell = document.createElement('div');
-      cell.style.cssText = 'width:44px;height:44px;background:' + bgColor + ';display:flex;align-items:center;justify-content:center;font-size:1.4rem;border-radius:3px;';
-      cell.textContent = cellEmojis[idx];
-      preview.appendChild(cell);
-    });
-  }
-
-  // 보드 (빈 슬롯) 렌더
-  const board = document.getElementById('puzzle-board');
-  if (board) {
-    board.innerHTML = '';
-    for (let i = 0; i < N; i++) {
-      const slot = document.createElement('div');
-      slot.id = 'board-slot-' + i;
-      slot.style.cssText = 'width:90px;height:90px;background:rgba(120,120,168,0.07);border-radius:7px;border:2px dashed ' + c.c1 + '30;display:flex;align-items:center;justify-content:center;font-size:2rem;transition:background 0.2s;';
-      slot.dataset.expects = solved[i];
-      slot.addEventListener('dragover', e => { e.preventDefault(); slot.style.background = c.c1 + '22'; });
-      slot.addEventListener('dragleave', () => { if (!slot.dataset.filled) slot.style.background = 'rgba(120,120,168,0.07)'; });
-      slot.addEventListener('drop', e => {
-        e.preventDefault();
-        const pieceIdx = e.dataTransfer.getData('pieceIdx');
-        _dropPiece(pieceIdx, i, slot, c, cellEmojis, bgColor, solved);
-      });
-      slot.addEventListener('touchend', e => {
-        e.preventDefault();
-        if (window._dragPieceIdx !== undefined) {
-          _dropPiece(window._dragPieceIdx, i, slot, c, cellEmojis, bgColor, solved);
-        }
-      });
-      board.appendChild(slot);
-    }
-  }
-
-  // 퍼즐 조각 렌더
-  const pieces = document.getElementById('puzzle-pieces');
-  if (pieces) {
-    pieces.innerHTML = '';
-    shuffled.forEach(idx => {
-      const piece = document.createElement('div');
-      piece.id = 'piece-' + idx;
-      piece.draggable = true;
-      piece.dataset.pieceIdx = idx;
-      piece.style.cssText = 'width:56px;height:56px;background:' + bgColor + ';border-radius:8px;border:2px solid ' + c.c1 + '60;display:flex;align-items:center;justify-content:center;font-size:1.7rem;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,0.12);transition:transform 0.12s,opacity 0.2s;';
-      piece.textContent = cellEmojis[idx];
-      piece.addEventListener('dragstart', e => { e.dataTransfer.setData('pieceIdx', idx); piece.style.opacity = '0.5'; });
-      piece.addEventListener('dragend', () => { piece.style.opacity = '1'; });
-      piece.addEventListener('touchstart', e => { window._dragPieceIdx = idx; piece.style.transform = 'scale(1.12)'; }, {passive:true});
-      piece.addEventListener('touchend', () => { piece.style.transform = ''; });
-      pieces.appendChild(piece);
-    });
-  }
-
-  // 타이머 시작
-  _startPuzzleTimer(60, c);
-}
-
-let _puzzleTimerInterval = null;
-function _startPuzzleTimer(sec, c) {
-  if (_puzzleTimerInterval) clearInterval(_puzzleTimerInterval);
-  let remaining = sec;
-  const fill = document.getElementById('timer-bar-fill');
-  const txt = document.getElementById('timer-text');
-  let alertShown = false;
-
-  _puzzleTimerInterval = setInterval(() => {
-    remaining--;
-    if (txt) txt.textContent = remaining;
-    if (fill) fill.style.height = (remaining / sec * 100) + '%';
-    if (remaining <= 10 && !alertShown) {
-      alertShown = true;
-      clearInterval(_puzzleTimerInterval);
-      _showTimerAlert(c, () => _startPuzzleTimer(remaining, c));
-    }
-    if (remaining <= 0) {
-      clearInterval(_puzzleTimerInterval);
-      const msg = document.getElementById('puzzle-result-msg');
-      if (msg) msg.innerHTML = '⏰ 시간 초과! 아쉽지만 다음엔 꼭 완성해봐요! 💪';
-      _disablePuzzle();
-    }
-  }, 1000);
-}
-
-function _showTimerAlert(c, resume) {
-  const popup = document.createElement('div');
-  popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.7);background:linear-gradient(135deg,' + c.c1 + ',' + c.c2 + ');color:#fff;border-radius:24px;padding:28px 36px;text-align:center;z-index:9999;box-shadow:0 20px 60px rgba(0,0,0,0.25);font-family:inherit;transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275),opacity 0.3s;opacity:0;';
-  popup.innerHTML = '<div style="font-size:2rem;margin-bottom:8px;">⏰</div><div style="font-size:1.15rem;font-weight:900;line-height:1.6;">10초 남았어요!<br>거의 다 왔어요!</div>';
-  document.body.appendChild(popup);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    popup.style.transform = 'translate(-50%,-50%) scale(1)';
-    popup.style.opacity = '1';
-  }));
-  setTimeout(() => {
-    popup.style.transform = 'translate(-50%,-50%) scale(0.8)';
-    popup.style.opacity = '0';
-    setTimeout(() => { popup.remove(); resume(); }, 320);
-  }, 1000);
-}
-
-function _dropPiece(pieceIdx, slotIdx, slot, c, cellEmojis, bgColor, solved) {
-  pieceIdx = parseInt(pieceIdx);
-  if (slot.dataset.filled) return;
-  const piece = document.getElementById('piece-' + pieceIdx);
-  if (!piece) return;
-
-  const expects = parseInt(slot.dataset.expects);
-  const isCorrect = (expects === pieceIdx);
-
-  slot.dataset.filled = '1';
-  slot.style.background = bgColor;
-  slot.style.border = '2px solid ' + (isCorrect ? c.c1 : '#e57373');
-  slot.style.fontSize = '2.2rem';
-  slot.textContent = cellEmojis[pieceIdx];
-
-  piece.style.opacity = '0.25';
-  piece.style.pointerEvents = 'none';
-  piece.draggable = false;
-
-  // 완성 체크
-  const allSlots = document.querySelectorAll('[id^="board-slot-"]');
-  const allFilled = [...allSlots].every(s => s.dataset.filled);
-  if (allFilled) {
-    const allCorrect = [...allSlots].every(s => {
-      const placed = s.textContent;
-      const exp = parseInt(s.dataset.expects);
-      return placed === cellEmojis[exp];
-    });
-    clearInterval(_puzzleTimerInterval);
-    const msg = document.getElementById('puzzle-result-msg');
-    if (allCorrect) {
-      if (msg) msg.innerHTML = '🎉 완성! 대박 집중력이에요! 퍼즐 마스터 등극! 🏆';
-    } else {
-      if (msg) msg.innerHTML = '😅 다 채웠는데 몇 개가 틀렸어요! 다시 도전해볼까요?';
-    }
-  }
-}
-
-function _disablePuzzle() {
-  document.querySelectorAll('[id^="piece-"]').forEach(p => {
-    p.style.pointerEvents = 'none'; p.draggable = false;
   });
 }
 
