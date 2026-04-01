@@ -392,8 +392,8 @@
     /* ── 타로 게임: 부채꼴 펼치기 ── */
     .tarot-fan-container {
       position: relative;
-      height: 210px;
-      margin: 0 auto 16px;
+      height: 220px;
+      margin: 0 auto 32px;
       overflow: visible;
     }
     /* 팬 카드 래퍼: 하단 중앙에서 회전 */
@@ -402,16 +402,21 @@
       bottom: 0;
       left: calc(50% - 34px);
       width: 68px;
-      transform-origin: 34px 210px;
+      transform-origin: 34px 230px;
       cursor: pointer;
       transition: filter 0.18s ease;
     }
-    .spread-wrap:hover:not(.picked) {
+    .spread-wrap:hover:not(.picked):not(.dimmed) {
       filter: brightness(1.35) drop-shadow(0 0 8px rgba(255,255,255,0.55));
     }
     .spread-wrap.picked {
       pointer-events: none;
-      filter: brightness(0.35) saturate(0);
+      filter: brightness(0.45) saturate(0.2) sepia(0.3);
+    }
+    .spread-wrap.dimmed {
+      pointer-events: none;
+      filter: brightness(0.5) saturate(0.15);
+      transition: filter 0.5s ease;
     }
     /* 팬 카드 본체 */
     .fan-card-inner {
@@ -606,8 +611,8 @@
       }
 
       /* 타로 카드 */
-      .tarot-fan-container { height: 175px; }
-      .spread-wrap { width: 56px; left: calc(50% - 28px); transform-origin: 28px 175px; }
+      .tarot-fan-container { height: 180px; }
+      .spread-wrap { width: 56px; left: calc(50% - 28px); transform-origin: 28px 190px; }
       .fan-card-inner { width: 56px; height: 86px; }
       .fan-symbol { font-size: 0.95rem; }
       .tarot-slot { width: 76px; height: 114px; }
@@ -957,8 +962,8 @@ function initTarotSpread() {
 
   for (let i = 0; i < _TAROT_TOTAL; i++) {
     const angle = startAngle + step * i;
-    // z-index: 중앙 카드가 가장 위
-    const zIdx = Math.round(10 - Math.abs(i - (_TAROT_TOTAL - 1) / 2));
+    // z-index: 마지막(오른쪽) 카드가 가장 위
+    const zIdx = i + 1;
 
     const wrap = document.createElement('div');
     wrap.className = 'spread-wrap';
@@ -996,11 +1001,11 @@ function pickTarotCard(idx, bg, c2) {
     if (_tarotPickCount === 1) inst.textContent = '✦ 두 번째 카드를 골라주세요';
     else if (_tarotPickCount === 2) inst.textContent = '✦ 마지막 카드를 골라주세요';
     else {
-      // 나머지 팬 카드 흐리게
+      // 나머지 팬 카드 어둡게 (dimmed — 검정 아닌 색)
       for (let i = 0; i < _TAROT_TOTAL; i++) {
         const w = document.getElementById(`spread-wrap-${i}`);
         if (w && !w.classList.contains('picked')) {
-          w.classList.add('picked');
+          w.classList.add('dimmed');
         }
       }
       inst.textContent = '✦ 카드를 한 장씩 탭해서 결과를 확인하세요!';
