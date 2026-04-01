@@ -153,8 +153,16 @@
     }
     .card.selected .check-badge { display: flex; }
 
+    /* ── 프린트(PDF 저장) ── */
+    @media print {
+      body > *:not(#app) { display: none !important; }
+      .cloud-bg, .progress-wrap { display: none !important; }
+      .btn-wrap, .celeb-box { display: none !important; }
+      .result { box-shadow: none !important; }
+      body { background: white !important; padding: 0 !important; }
+    }
     /* ── 버튼 ── */
-    .btn-wrap { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn-wrap { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
     .btn-hist {
       padding: 12px 32px; font-size: 0.95rem; font-weight: 700;
       border: 2px solid #3196FF; border-radius: 50px;
@@ -1992,8 +2000,10 @@ function renderResult() {
       </div>
     </div>
     <div class="btn-wrap">
-      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="saveResultImage()">저장 하기</button>
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">다시 하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="shareResult()">🔗 공유하기</button>
+      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="saveResultPDF()">📄 저장하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">🔄 다시하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showTypesModal()">✨ 다른 유형 구경하기</button>
     </div>`;
 
   initTarotSpread();
@@ -2044,36 +2054,75 @@ function closeFeedbackModal() {
   renderIntro();
 }
 
-/* ── 저장하기 ── */
-function saveResultImage() {
-  const btn = document.getElementById('save-btn');
-  if (btn) { btn.textContent = '저장 중...'; btn.disabled = true; }
-  const el = document.querySelector('.result');
-  if (!el) { if (btn) { btn.textContent = '저장 하기'; btn.disabled = false; } return; }
-
-  // html2canvas via CDN (lazy load)
-  if (window.html2canvas) {
-    _doCapture(el, btn);
+/* ── 공유하기 ── */
+function shareResult() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: '나는 어떤 사람일까? 심리테스트', url });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      _showToast('🔗 링크가 복사되었어요!');
+    }).catch(() => {
+      _showToast('링크: ' + url);
+    });
   } else {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = () => _doCapture(el, btn);
-    s.onerror = () => { alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'); if (btn) { btn.textContent = '저장 하기'; btn.disabled = false; } };
-    document.head.appendChild(s);
+    _showToast('링크: ' + url);
   }
 }
 
-function _doCapture(el, btn) {
-  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = 'picture-tarot-result.png';
-    a.click();
-    if (btn) { btn.textContent = '저장 하기'; btn.disabled = false; }
-  }).catch(() => {
-    alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
-    if (btn) { btn.textContent = '저장 하기'; btn.disabled = false; }
-  });
+function _showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(30,30,50,0.88);color:#fff;padding:12px 22px;border-radius:24px;font-size:0.9rem;font-weight:700;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:opacity 0.4s;';
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2000);
+}
+
+/* ── PDF 저장하기 ── */
+function saveResultPDF() {
+  window.print();
+}
+
+/* ── 다른 유형 구경하기 팝업 ── */
+function showTypesModal() {
+  const types = [
+    { title:'자유로운 마당발',    desc:'사람과 아이디어를 자연스럽게 이어주는 사람', emoji:'🎉' },
+    { title:'따뜻한 아티스트',    desc:'감정과 상상으로 사람의 마음을 움직이는 사람', emoji:'🎨' },
+    { title:'열정적인 리더',      desc:'새로운 길을 만들고 사람들을 이끄는 사람', emoji:'🚀' },
+    { title:'인기있는 인플루언서',desc:'공감하며 앞에서 이끄는 영향력 있는 사람', emoji:'✨' },
+    { title:'아이디어 탐험가',    desc:'생각과 상상으로 새로운 것을 발견하는 사람', emoji:'🗺️' },
+    { title:'번쩍 발명왕',        desc:'아이디어를 만들어내는 창의적인 사람', emoji:'💡' },
+    { title:'도전적인 전략가',    desc:'빠르게 판단하고 바로 행동하는 실행력 있는 사람', emoji:'⚡' },
+    { title:'카리스마 리더',      desc:'결단력 있게 팀을 이끄는 리더형 사람', emoji:'👑' },
+    { title:'꿈꾸는 몽상가',      desc:'조용히 상상하며 나만의 세상을 만드는 사람', emoji:'🌙' },
+    { title:'마음 치유자',        desc:'다른 사람의 마음을 이해하고 따뜻하게 위로하는 사람', emoji:'🌿' },
+    { title:'든든한 조력자',      desc:'곁에서 묵묵히 도와주며 힘이 되어주는 사람', emoji:'🛡️' },
+    { title:'따뜻한 수호자',      desc:'사람들을 보호하고 돌보는 따뜻한 사람', emoji:'💜' },
+    { title:'조용한 아이디어왕',  desc:'깊이 생각해 새로운 방법을 찾아내는 사람', emoji:'🎯' },
+    { title:'섬세한 사색가',      desc:'논리와 감정을 함께 생각하는 균형 잡힌 사람', emoji:'🔭' },
+    { title:'냉철한 마스터',      desc:'체계적으로 계획하고 실행하는 전략적인 사람', emoji:'🧩' },
+    { title:'신뢰받는 현자',      desc:'깊은 통찰로 사람들에게 신뢰를 주는 사람', emoji:'🏛️' },
+  ];
+
+  const listHTML = types.map(t => `
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+      <span style="font-size:1.3rem;flex-shrink:0;line-height:1.4;">${t.emoji}</span>
+      <div>
+        <div style="font-size:0.9rem;font-weight:800;color:#2a2a4a;margin-bottom:2px;">${t.title}</div>
+        <div style="font-size:0.78rem;color:#7878a8;line-height:1.5;">${t.desc}</div>
+      </div>
+    </div>`).join('');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'types-modal-overlay';
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box" style="position:relative;max-height:80vh;overflow-y:auto;padding:28px 22px 22px;">
+      <button onclick="document.getElementById('types-modal-overlay').remove()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#aaa;line-height:1;" title="닫기">×</button>
+      <p style="font-size:1rem;font-weight:900;color:#2a2a4a;margin-bottom:16px;text-align:center;">✨ 16가지 유형 소개</p>
+      ${listHTML}
+    </div>`;
+  document.body.appendChild(overlay);
 }
 
 renderIntro();
