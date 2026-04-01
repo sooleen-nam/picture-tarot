@@ -533,6 +533,7 @@
       flex: 1; display: flex; align-items: center; justify-content: center;
       border-top: 1px solid rgba(0,0,0,0.08);
       margin-top: 10px; padding: 8px 4px 0; width: 100%;
+      overflow: hidden;
     }
     .slot-front-value {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
@@ -1001,6 +1002,21 @@ const _SLOT_CONTENTS = [
   { q: '오늘의<br>행운 한 마디',         key: 'luckyMsg',  sym: '☀' },
 ];
 
+function _autoFitSlotText(slotIdx) {
+  const el = document.getElementById('slot-val-' + slotIdx);
+  if (!el) return;
+  const wrap = el.parentElement;
+  if (!wrap) return;
+  const MIN_PX = 7;
+  let size = parseFloat(window.getComputedStyle(el).fontSize) || 16.8;
+  // 강제로 앞면을 잠깐 가시화해서 측정
+  el.style.fontSize = size + 'px';
+  while (size > MIN_PX && el.scrollHeight > wrap.clientHeight + 2) {
+    size -= 0.5;
+    el.style.fontSize = size + 'px';
+  }
+}
+
 function initTarotSpread() {
   const spread = document.getElementById('tarot-spread');
   if (!spread) return;
@@ -1099,13 +1115,18 @@ function _fillSlot(slotIdx, bg, c2) {
         <div class="slot-inner-border" style="border:1px solid ${bg}25;"></div>
         <div class="slot-front-q">${info.q}</div>
         <div class="slot-value-wrap">
-          <div class="slot-front-value" style="color:${bg};">${slotIdx === 2 ? '"' + val + '"' : val}</div>
+          <div class="slot-front-value" id="slot-val-${slotIdx}" style="color:${bg};">${slotIdx === 2 ? '"' + val + '"' : val}</div>
         </div>
       </div>
     </div>`;
 
   card.addEventListener('click', () => _flipSlotCard(slotIdx));
   slot.appendChild(card);
+
+  // 행운 한마디(슬롯2) 텍스트 자동 축소
+  if (slotIdx === 2) {
+    requestAnimationFrame(() => requestAnimationFrame(() => _autoFitSlotText(slotIdx)));
+  }
 
   // 팝인 애니메이션 후 class 제거
   setTimeout(() => card.classList.remove('pop-in'), 400);
