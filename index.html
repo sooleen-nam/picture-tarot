@@ -1962,11 +1962,11 @@ function renderResult() {
         </div>
       </div>
     </div>
-    <div class="btn-wrap">
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="shareResult()">🔗 공유하기</button>
-      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="saveResultPDF()">📄 저장하기</button>
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showFeedbackModal()">🔄 다시하기</button>
-      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;" onclick="showTypesModal()">✨ 다른 유형 구경하기</button>
+    <div class="btn-wrap" style="flex-direction:column;align-items:center;">
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="shareResult()">링크 공유하기</button>
+      <button class="btn" id="save-btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="saveResultImage()">결과 저장하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="showFeedbackModal()">테스트 다시하기</button>
+      <button class="btn" style="background:linear-gradient(135deg,${c.c1},${c.c2});box-shadow:0 6px 24px ${c.c1}40;width:220px;" onclick="showTypesModal()">다른 유형 구경하기</button>
     </div>`;
 
   initTarotSpread();
@@ -2022,9 +2022,34 @@ function _showToast(msg) {
   setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2000);
 }
 
-/* ── PDF 저장하기 ── */
-function saveResultPDF() {
-  window.print();
+/* ── 이미지 저장하기 ── */
+function saveResultImage() {
+  const btn = document.getElementById('save-btn');
+  if (btn) { btn.textContent = '저장 중...'; btn.disabled = true; }
+  const el = document.querySelector('.result');
+  if (!el) { if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; } return; }
+  if (window.html2canvas) {
+    _doCapture(el, btn);
+  } else {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload = () => _doCapture(el, btn);
+    s.onerror = () => { alert('저장 기능을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'); if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; } };
+    document.head.appendChild(s);
+  }
+}
+
+function _doCapture(el, btn) {
+  html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = 'picture-tarot-result.png';
+    a.click();
+    if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; }
+  }).catch(() => {
+    alert('저장 중 오류가 발생했어요. 스크린샷을 이용해 주세요!');
+    if (btn) { btn.textContent = '결과 저장하기'; btn.disabled = false; }
+  });
 }
 
 /* ── 다른 유형 구경하기 팝업 ── */
