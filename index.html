@@ -389,93 +389,124 @@
     .tarot-subtitle {
       font-size: 0.76rem; color: #aaa; margin-bottom: 20px;
     }
-    /* ── 타로 게임: 20장 펼치기 ── */
-    .tarot-spread {
-      display: flex; flex-wrap: wrap;
-      justify-content: center; gap: 8px;
-      max-width: 560px; margin: 0 auto 24px;
-    }
-    .tarot-card {
-      width: 72px;
-      perspective: 600px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: transform 0.15s ease;
-    }
-    .tarot-card:hover:not(.picked):not(.flipped) { transform: translateY(-6px) scale(1.05); }
-    .tarot-card.picked { cursor: default; }
-    .tarot-card-inner {
+    /* ── 타로 게임: 부채꼴 펼치기 ── */
+    .tarot-fan-container {
       position: relative;
-      width: 100%; height: 110px;
-      transform-style: preserve-3d;
-      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 210px;
+      margin: 0 auto 16px;
+      overflow: visible;
     }
-    .tarot-card.flipped .tarot-card-inner { transform: rotateY(180deg); }
-    .tarot-face {
+    /* 팬 카드 래퍼: 하단 중앙에서 회전 */
+    .spread-wrap {
+      position: absolute;
+      bottom: 0;
+      left: calc(50% - 34px);
+      width: 68px;
+      transform-origin: 34px 210px;
+      cursor: pointer;
+      transition: filter 0.18s ease;
+    }
+    .spread-wrap:hover:not(.picked) {
+      filter: brightness(1.35) drop-shadow(0 0 8px rgba(255,255,255,0.55));
+    }
+    .spread-wrap.picked {
+      pointer-events: none;
+      filter: brightness(0.35) saturate(0);
+    }
+    /* 팬 카드 본체 */
+    .fan-card-inner {
+      position: relative;
+      width: 68px; height: 105px;
+      transform-style: preserve-3d;
+      border-radius: 9px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+    }
+    .fan-face {
       position: absolute; inset: 0;
-      border-radius: 10px;
+      border-radius: 9px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: 6px 5px;
     }
-    .tarot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 10px 8px 8px; }
-    .tarot-inner-border {
+    .fan-inner-border {
       position: absolute; inset: 5px;
-      border-radius: 7px;
-      pointer-events: none;
+      border-radius: 6px; pointer-events: none;
     }
-    .tarot-symbol { font-size: 1.4rem; margin-bottom: 6px; line-height: 1; }
-    .tarot-card-name { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
-    .tarot-hint { font-size: 0.48rem; margin-top: 4px; opacity: 0.65; color: #fff; }
-    .tarot-front-q {
+    .fan-symbol { font-size: 1.15rem; line-height: 1; }
+    /* 슬롯 행 */
+    .tarot-slots-row {
+      display: flex; justify-content: center; gap: 18px;
+      margin-top: 8px; flex-wrap: wrap;
+    }
+    .tarot-slot-wrap { text-align: center; }
+    .tarot-slot {
+      width: 88px; height: 132px;
+      border: 2px dashed rgba(120,120,168,0.3);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+    .tarot-slot .slot-empty-num {
+      font-size: 1.6rem; font-weight: 900;
+      color: rgba(120,120,168,0.25);
+    }
+    /* 슬롯에 들어간 카드 */
+    .slot-card {
+      width: 88px; height: 132px;
+      position: relative;
+      perspective: 700px;
+      cursor: default;
+    }
+    .slot-card.flippable { cursor: pointer; }
+    .slot-card-inner {
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+    }
+    .slot-card.flipped .slot-card-inner { transform: rotateY(180deg); }
+    .slot-face {
+      position: absolute; inset: 0;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 8px 7px;
+    }
+    .slot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 12px 9px 9px; }
+    .slot-inner-border { position: absolute; inset: 6px; border-radius: 8px; pointer-events: none; }
+    .slot-symbol { font-size: 1.6rem; margin-bottom: 6px; line-height: 1; }
+    .slot-card-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
+    .slot-hint { font-size: 0.5rem; margin-top: 5px; opacity: 0.7; color: #fff; }
+    .slot-front-q {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
-      font-size: 0.5rem; line-height: 1.6; text-align: center; color: #aaa; flex-shrink: 0;
+      font-size: 0.54rem; line-height: 1.65; text-align: center; color: #aaa; flex-shrink: 0;
     }
-    .tarot-value-wrap {
+    .slot-value-wrap {
       flex: 1; display: flex; align-items: center; justify-content: center;
       border-top: 1px solid rgba(0,0,0,0.08);
-      margin-top: 6px; padding: 5px 2px 0; width: 100%;
+      margin-top: 8px; padding: 6px 2px 0; width: 100%;
     }
-    .tarot-front-value {
+    .slot-front-value {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
-      font-size: 0.72rem; font-weight: 700; line-height: 1.45;
+      font-size: 0.82rem; font-weight: 700; line-height: 1.45;
       text-align: center; word-break: keep-all;
     }
-    /* 선택된 카드 번호 뱃지 */
-    .tarot-pick-badge {
-      position: absolute; top: -8px; left: 50%;
-      transform: translateX(-50%);
-      width: 20px; height: 20px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem; font-weight: 900; color: #fff;
-      z-index: 10; pointer-events: none;
-      opacity: 0; transition: opacity 0.25s ease;
-    }
-    .tarot-card.picked .tarot-pick-badge { opacity: 1; }
-    /* 결과 확인 영역 */
-    .tarot-picked-row {
-      display: flex; justify-content: center; gap: 14px;
-      margin-top: 4px; flex-wrap: wrap;
-    }
-    .tarot-picked-slot {
-      width: 100px; text-align: center;
-    }
-    .tarot-picked-slot .tarot-card { width: 100px; }
-    .tarot-picked-slot .tarot-card-inner { height: 148px; }
-    .tarot-picked-slot .tarot-symbol { font-size: 1.6rem; }
-    .tarot-picked-slot .tarot-card-name { font-size: 0.75rem; }
-    .tarot-picked-slot .tarot-hint { font-size: 0.54rem; }
-    .tarot-picked-slot .tarot-front-q { font-size: 0.56rem; }
-    .tarot-picked-slot .tarot-front-value { font-size: 0.85rem; }
-    .tarot-slot-label {
-      font-size: 0.72rem; color: #aaa; margin-top: 6px;
-    }
+    .slot-name-label { font-size: 0.7rem; color: #aaa; margin-top: 7px; }
     .tarot-instruction {
-      font-size: 0.8rem; color: #7878a8; margin-bottom: 16px;
+      font-size: 0.82rem; color: #7878a8; margin-bottom: 14px;
       font-weight: 600; min-height: 1.4em;
     }
+    /* 슬롯 카드 팝인 애니메이션 */
+    @keyframes slotPopIn {
+      from { transform: scale(0.5) translateY(20px); opacity: 0; }
+      to   { transform: scale(1) translateY(0);      opacity: 1; }
+    }
+    .slot-card { animation: none; }
+    .slot-card.pop-in { animation: slotPopIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275) both; }
 
     /* ── 피드백 모달 ── */
     .modal-overlay {
@@ -575,16 +606,14 @@
       }
 
       /* 타로 카드 */
-      .tarot-spread { gap: 6px; }
-      .tarot-card { width: 58px; }
-      .tarot-card-inner { height: 88px; }
-      .tarot-symbol { font-size: 1.1rem; margin-bottom: 4px; }
-      .tarot-card-name { font-size: 0.52rem; }
-      .tarot-hint { font-size: 0.4rem; }
-      .tarot-picked-slot { width: 88px; }
-      .tarot-picked-slot .tarot-card { width: 88px; }
-      .tarot-picked-slot .tarot-card-inner { height: 130px; }
-      .tarot-picked-slot .tarot-front-value { font-size: 0.75rem; }
+      .tarot-fan-container { height: 175px; }
+      .spread-wrap { width: 56px; left: calc(50% - 28px); transform-origin: 28px 175px; }
+      .fan-card-inner { width: 56px; height: 86px; }
+      .fan-symbol { font-size: 0.95rem; }
+      .tarot-slot { width: 76px; height: 114px; }
+      .slot-card { width: 76px; height: 114px; }
+      .slot-symbol { font-size: 1.3rem; }
+      .slot-front-value { font-size: 0.72rem; }
       .tarot-title { font-size: 0.88rem; }
       .tarot-section { padding: 16px 10px 16px; }
     }
@@ -900,102 +929,134 @@ function getResult() {
   return resultTypes.find(r => r.key === code) || resultTypes[0];
 }
 
-/* ── 타로 카드 게임 ── */
+/* ── 타로 카드 게임 (부채꼴 팬) ── */
 let _tarotPickCount = 0;
-const _tarotPickOrder = []; // 선택된 spread 카드 인덱스 순서
 const _TAROT_TOTAL = 20;
 const _TAROT_SYMBOLS = ['☽','✦','☀','★','♦','✿','❋','⚜','♠','❂','⊹','✵','⋆','∞','❃','◈','⟡','✤','◉','⌘'];
+
+const _SLOT_CONTENTS = [
+  { q: '오늘 행운이<br>찾아오는 시각은', key: 'luckyTime',  sym: '☽' },
+  { q: '지녀야 할<br>행운 아이템은',     key: 'luckyItem', sym: '✦' },
+  { q: '오늘의<br>행운 한 마디',         key: 'luckyMsg',  sym: '☀' },
+];
 
 function initTarotSpread() {
   const spread = document.getElementById('tarot-spread');
   if (!spread) return;
   _tarotPickCount = 0;
-  _tarotPickOrder.length = 0;
 
-  // 타로 섹션 색상은 renderResult에서 이미 설정됨
-  // 각 카드의 뒷면 색상을 spread에서 가져옴
   const section = document.getElementById('tarot-section');
-  const backBg = section ? section.dataset.color1 || '#7878c8' : '#7878c8';
-  const backC2 = section ? section.dataset.color2 || '#ffffff' : '#ffffff';
+  const bg  = section ? section.dataset.color1 || '#3a2d6e' : '#3a2d6e';
+  const c2  = section ? section.dataset.color2 || '#d4af37' : '#d4af37';
 
   spread.innerHTML = '';
+
+  const totalAngle = 160;
+  const startAngle = -totalAngle / 2;
+  const step = totalAngle / (_TAROT_TOTAL - 1);
+
   for (let i = 0; i < _TAROT_TOTAL; i++) {
-    const card = document.createElement('div');
-    card.className = 'tarot-card';
-    card.id = `spread-card-${i}`;
-    card.style.position = 'relative';
-    card.innerHTML = `
-      <div class="tarot-pick-badge" id="badge-${i}" style="background:${backBg}"></div>
-      <div class="tarot-card-inner">
-        <div class="tarot-face tarot-back-face" style="background:${backBg};">
-          <div class="tarot-inner-border" style="border:1px solid ${backC2}50;"></div>
-          <div class="tarot-symbol" style="color:${backC2};">${_TAROT_SYMBOLS[i]}</div>
-        </div>
-        <div class="tarot-face tarot-front-face" style="background:#f8f6ff;box-shadow:inset 0 0 0 2px ${backBg}30;">
-          <div class="tarot-inner-border" style="border:1px solid ${backBg}25;"></div>
-          <div style="font-size:1.4rem;margin-bottom:4px;">${_TAROT_SYMBOLS[i]}</div>
-          <div style="font-size:0.52rem;color:${backBg};font-weight:800;">✓ 선택됨</div>
-        </div>
+    const angle = startAngle + step * i;
+    // z-index: 중앙 카드가 가장 위
+    const zIdx = Math.round(10 - Math.abs(i - (_TAROT_TOTAL - 1) / 2));
+
+    const wrap = document.createElement('div');
+    wrap.className = 'spread-wrap';
+    wrap.id = `spread-wrap-${i}`;
+    wrap.style.cssText = `transform:rotate(${angle}deg); z-index:${zIdx};`;
+
+    wrap.innerHTML = `
+      <div class="fan-card-inner" style="background:${bg};">
+        <div class="fan-inner-border" style="border:1px solid ${c2}45;"></div>
+        <div class="fan-symbol" style="color:${c2};">${_TAROT_SYMBOLS[i]}</div>
       </div>`;
-    card.onclick = () => pickTarotCard(i);
-    spread.appendChild(card);
+
+    wrap.addEventListener('click', () => pickTarotCard(i, bg, c2));
+    spread.appendChild(wrap);
   }
 }
 
-function pickTarotCard(idx) {
+function pickTarotCard(idx, bg, c2) {
   if (_tarotPickCount >= 3) return;
-  const card = document.getElementById(`spread-card-${idx}`);
-  if (!card || card.classList.contains('picked')) return;
+  const wrap = document.getElementById(`spread-wrap-${idx}`);
+  if (!wrap || wrap.classList.contains('picked')) return;
 
   _tarotPickCount++;
-  _tarotPickOrder.push(idx);
+  const slotIdx = _tarotPickCount - 1;
 
-  // 뒤집기
-  card.classList.add('picked', 'flipped');
-  card.onclick = null;
+  // 팬에서 선택됨 표시 (흐리게)
+  wrap.classList.add('picked');
 
-  // 뱃지 번호 표시
-  const badge = document.getElementById(`badge-${idx}`);
-  if (badge) badge.textContent = _tarotPickCount;
+  // 슬롯에 카드 채우기
+  _fillSlot(slotIdx, bg, c2);
 
-  // 안내 문구 업데이트
+  // 안내 문구
   const inst = document.getElementById('tarot-instruction');
   if (inst) {
     if (_tarotPickCount === 1) inst.textContent = '✦ 두 번째 카드를 골라주세요';
     else if (_tarotPickCount === 2) inst.textContent = '✦ 마지막 카드를 골라주세요';
-    else if (_tarotPickCount === 3) {
-      inst.textContent = '✦ 3장을 모두 골랐어요! 아래에서 결과를 확인하세요 ✦';
-      // 나머지 카드 흐리게
+    else {
+      // 나머지 팬 카드 흐리게
       for (let i = 0; i < _TAROT_TOTAL; i++) {
-        const c = document.getElementById(`spread-card-${i}`);
-        if (c && !c.classList.contains('picked')) {
-          c.style.opacity = '0.3';
-          c.style.pointerEvents = 'none';
+        const w = document.getElementById(`spread-wrap-${i}`);
+        if (w && !w.classList.contains('picked')) {
+          w.classList.add('picked');
         }
       }
-      // 결과 카드 영역 표시 (약간 딜레이)
-      setTimeout(() => {
-        const row = document.getElementById('tarot-picked-row');
-        if (row) {
-          row.style.display = 'flex';
-          // 순서대로 1→2→3 뒤집기
-          ['picked-card-0','picked-card-1','picked-card-2'].forEach((id, i) => {
-            const pc = document.getElementById(id);
-            if (pc) {
-              pc.classList.remove('flipped');
-              setTimeout(() => pc.classList.add('flipped'), 300 + i * 700);
-            }
-          });
-        }
-      }, 400);
+      inst.textContent = '✦ 카드를 한 장씩 탭해서 결과를 확인하세요!';
     }
   }
 }
 
-function flipTarot(idx) {
-  const card = document.getElementById(`tcard-${idx}`);
-  if (card) card.classList.toggle('flipped');
+function _fillSlot(slotIdx, bg, c2) {
+  const slot = document.getElementById(`slot-${slotIdx}`);
+  if (!slot) return;
+
+  const section = document.getElementById('tarot-section');
+  const luckyTime = section ? section.dataset.luckyTime : '';
+  const luckyItem = section ? section.dataset.luckyItem : '';
+  const luckyMsg  = section ? section.dataset.luckyMsg  : '';
+  const values = [luckyTime, luckyItem, luckyMsg];
+
+  const info   = _SLOT_CONTENTS[slotIdx];
+  const val    = values[slotIdx];
+
+  slot.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'slot-card flippable pop-in';
+  card.id = `slot-card-${slotIdx}`;
+  card.innerHTML = `
+    <div class="slot-card-inner">
+      <div class="slot-face" style="background:${bg};">
+        <div class="slot-inner-border" style="border:1px solid ${c2}50;"></div>
+        <div class="slot-symbol" style="color:${c2};">${info.sym}</div>
+        <div class="slot-card-label" style="color:${c2}88;">카드 ${['A','B','C'][slotIdx]}</div>
+        <div class="slot-hint">탭하여 확인</div>
+      </div>
+      <div class="slot-face slot-front-face" style="background:#fff;box-shadow:inset 0 0 0 2px ${bg}30;">
+        <div class="slot-inner-border" style="border:1px solid ${bg}25;"></div>
+        <div class="slot-front-q">${info.q}</div>
+        <div class="slot-value-wrap">
+          <div class="slot-front-value" style="color:${bg};">${slotIdx === 2 ? '"' + val + '"' : val}</div>
+        </div>
+      </div>
+    </div>`;
+
+  card.addEventListener('click', () => _flipSlotCard(slotIdx));
+  slot.appendChild(card);
+
+  // 팝인 애니메이션 후 class 제거
+  setTimeout(() => card.classList.remove('pop-in'), 400);
 }
+
+function _flipSlotCard(slotIdx) {
+  const card = document.getElementById(`slot-card-${slotIdx}`);
+  if (!card || !card.classList.contains('flippable')) return;
+  card.classList.toggle('flipped');
+}
+
+function flipTarot() {} // 하위호환용 빈 함수
 
 /* ── 오늘의 행운 ── */
 function getTodayFortune(typeKey, picks) {
@@ -1848,50 +1909,28 @@ function renderResult() {
       <p class="result-picks-title" style="color:${c.c1}">✦ 선택한 카드 다시보기 ✦</p>
       <div class="result-picks">${picksHTML}</div>
       <div class="result-desc" style="border-left:4px solid ${c.c1}40;">${r.desc}</div>
-      <div class="tarot-section" id="tarot-section" data-color1="${c.c1}" data-color2="${c.c2}" style="border:2px solid ${c.c1}30; background:${c.kbg};">
+      <div class="tarot-section" id="tarot-section"
+           data-color1="${c.c1}" data-color2="${c.c2}"
+           data-lucky-time="${fortune.luckyTime.replace(/"/g,'&quot;')}"
+           data-lucky-item="${fortune.luckyItem.replace(/"/g,'&quot;')}"
+           data-lucky-msg="${fortune.luckyMsg.replace(/"/g,'&quot;')}"
+           style="border:2px solid ${c.c1}30; background:${c.kbg};">
         <div class="tarot-title" style="color:${c.c1}">${nickname ? nickname + '님만을 위한 그림 타로 카드!' : '그림 타로! 오늘의 행운은?'}</div>
         <p class="tarot-subtitle">카드 20장 중 마음에 드는 3장을 골라보세요</p>
         <p class="tarot-instruction" id="tarot-instruction">✦ 첫 번째 카드를 골라주세요</p>
-        <div class="tarot-spread" id="tarot-spread"></div>
-        <div class="tarot-picked-row" id="tarot-picked-row" style="display:none;">
-          <div class="tarot-picked-slot">
-            <div class="tarot-card flipped" id="picked-card-0">
-              <div class="tarot-card-inner">
-                <div class="tarot-face tarot-back-face" style="background:${c.c1};"><div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div><div class="tarot-symbol" style="color:${c.c2};">☽</div></div>
-                <div class="tarot-face tarot-front-face" style="background:#fff;box-shadow:inset 0 0 0 2px ${c.c1}30;">
-                  <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
-                  <div class="tarot-front-q">오늘 행운이<br>찾아오는 시각은</div>
-                  <div class="tarot-value-wrap"><div class="tarot-front-value" style="color:${c.c1};">${fortune.luckyTime}</div></div>
-                </div>
-              </div>
-            </div>
-            <div class="tarot-slot-label">카드 A</div>
+        <div class="tarot-fan-container" id="tarot-spread"></div>
+        <div class="tarot-slots-row" id="tarot-slots-row">
+          <div class="tarot-slot-wrap">
+            <div class="tarot-slot" id="slot-0"><span class="slot-empty-num">1</span></div>
+            <div class="slot-name-label">카드 A</div>
           </div>
-          <div class="tarot-picked-slot">
-            <div class="tarot-card flipped" id="picked-card-1">
-              <div class="tarot-card-inner">
-                <div class="tarot-face tarot-back-face" style="background:${c.c1};"><div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div><div class="tarot-symbol" style="color:${c.c2};">✦</div></div>
-                <div class="tarot-face tarot-front-face" style="background:#fff;box-shadow:inset 0 0 0 2px ${c.c1}30;">
-                  <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
-                  <div class="tarot-front-q">지녀야 할<br>행운 아이템은</div>
-                  <div class="tarot-value-wrap"><div class="tarot-front-value" style="color:${c.c1};">${fortune.luckyItem}</div></div>
-                </div>
-              </div>
-            </div>
-            <div class="tarot-slot-label">카드 B</div>
+          <div class="tarot-slot-wrap">
+            <div class="tarot-slot" id="slot-1"><span class="slot-empty-num">2</span></div>
+            <div class="slot-name-label">카드 B</div>
           </div>
-          <div class="tarot-picked-slot">
-            <div class="tarot-card flipped" id="picked-card-2">
-              <div class="tarot-card-inner">
-                <div class="tarot-face tarot-back-face" style="background:${c.c1};"><div class="tarot-inner-border" style="border:1px solid ${c.c2}50;"></div><div class="tarot-symbol" style="color:${c.c2};">☀</div></div>
-                <div class="tarot-face tarot-front-face" style="background:#fff;box-shadow:inset 0 0 0 2px ${c.c1}30;">
-                  <div class="tarot-inner-border" style="border:1px solid ${c.c1}25;"></div>
-                  <div class="tarot-front-q">오늘의<br>행운 한 마디</div>
-                  <div class="tarot-value-wrap"><div class="tarot-front-value" style="color:${c.c1};">"${fortune.luckyMsg}"</div></div>
-                </div>
-              </div>
-            </div>
-            <div class="tarot-slot-label">카드 C</div>
+          <div class="tarot-slot-wrap">
+            <div class="tarot-slot" id="slot-2"><span class="slot-empty-num">3</span></div>
+            <div class="slot-name-label">카드 C</div>
           </div>
         </div>
       </div>
