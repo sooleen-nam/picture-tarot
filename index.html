@@ -1462,23 +1462,216 @@ const _itemMeta = {
 };
 
 function triggerItemEffect(cardEl, label) {
-  playItemSound('click');
-  // 소리만 유지, 애니메이션 없음
-  setTimeout(() => {
-    playItemSound('whoosh');
-    _playItemSpecificSound(label);
-  }, 370);
+  _playItemSpecificSound(label);
 }
 
 function _playItemSpecificSound(label) {
+  const ac = _getAC();
+  if (!ac) return;
+
   switch (label) {
-    case '책':  playItemSound('pageflip'); break;
-    case '가방': playItemSound('zipper'); break;
-    case '우산': playItemSound('rain'); break;
-    case '시계': playItemSound('clock'); break;
-    case '의자': playItemSound('sit'); break;
-    case '신발': playItemSound('footstep'); break;
-    case '거울': playItemSound('glint'); break;
+
+    case '책': { // 책장 넘기는 종이 소리
+      const numPages = 14;
+      for (let i = 0; i < numPages; i++) {
+        const t = (i / numPages) * 2800 + Math.random() * 80;
+        setTimeout(() => {
+          const dur = 0.055 + Math.random() * 0.045;
+          const n = Math.floor(ac.sampleRate * dur);
+          const buf = ac.createBuffer(1, n, ac.sampleRate);
+          const d = buf.getChannelData(0);
+          for (let j = 0; j < n; j++) d[j] = Math.random() * 2 - 1;
+          const src = ac.createBufferSource(); src.buffer = buf;
+          const flt = ac.createBiquadFilter(); flt.type = 'bandpass';
+          flt.frequency.value = 3200 + Math.random() * 2200; flt.Q.value = 0.7;
+          const g = ac.createGain();
+          g.gain.setValueAtTime(0.32 * _itemVolume, ac.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+          src.connect(flt); flt.connect(g); g.connect(ac.destination);
+          src.start(); src.stop(ac.currentTime + dur);
+        }, t);
+      }
+      break;
+    }
+
+    case '가방': { // 지퍼 열리는 소리
+      const numTicks = 50;
+      for (let i = 0; i < numTicks; i++) {
+        const t = (i / numTicks) * 2600;
+        setTimeout(() => {
+          const dur = 0.022;
+          const freq = 600 + (i / numTicks) * 3400;
+          const n = Math.floor(ac.sampleRate * dur);
+          const buf = ac.createBuffer(1, n, ac.sampleRate);
+          const d = buf.getChannelData(0);
+          for (let j = 0; j < n; j++) d[j] = Math.random() * 2 - 1;
+          const src = ac.createBufferSource(); src.buffer = buf;
+          const flt = ac.createBiquadFilter(); flt.type = 'bandpass';
+          flt.frequency.value = freq; flt.Q.value = 6;
+          const g = ac.createGain();
+          g.gain.setValueAtTime(0.22 * _itemVolume, ac.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+          src.connect(flt); flt.connect(g); g.connect(ac.destination);
+          src.start(); src.stop(ac.currentTime + dur);
+        }, t);
+      }
+      break;
+    }
+
+    case '우산': { // 비가 우산에 닿는 소리
+      // 배경 빗소리
+      const rn = Math.floor(ac.sampleRate * 3.0);
+      const rbuf = ac.createBuffer(1, rn, ac.sampleRate);
+      const rd = rbuf.getChannelData(0);
+      for (let i = 0; i < rn; i++) rd[i] = Math.random() * 2 - 1;
+      const rsrc = ac.createBufferSource(); rsrc.buffer = rbuf;
+      const rflt = ac.createBiquadFilter(); rflt.type = 'bandpass';
+      rflt.frequency.value = 900; rflt.Q.value = 0.8;
+      const rg = ac.createGain(); rg.gain.setValueAtTime(0.09 * _itemVolume, ac.currentTime);
+      rsrc.connect(rflt); rflt.connect(rg); rg.connect(ac.destination);
+      rsrc.start(); rsrc.stop(ac.currentTime + 3.0);
+      // 개별 빗방울이 우산 캔버스에 닿는 소리
+      for (let i = 0; i < 30; i++) {
+        const delay = Math.random() * 3000;
+        setTimeout(() => {
+          const dur = 0.035 + Math.random() * 0.035;
+          const dn = Math.floor(ac.sampleRate * dur);
+          const dbuf = ac.createBuffer(1, dn, ac.sampleRate);
+          const dd = dbuf.getChannelData(0);
+          for (let j = 0; j < dn; j++) dd[j] = Math.random() * 2 - 1;
+          const dsrc = ac.createBufferSource(); dsrc.buffer = dbuf;
+          const dflt = ac.createBiquadFilter(); dflt.type = 'bandpass';
+          dflt.frequency.value = 350 + Math.random() * 700; dflt.Q.value = 3;
+          const dg = ac.createGain();
+          dg.gain.setValueAtTime(0.28 * _itemVolume, ac.currentTime);
+          dg.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+          dsrc.connect(dflt); dflt.connect(dg); dg.connect(ac.destination);
+          dsrc.start(); dsrc.stop(ac.currentTime + dur);
+        }, delay);
+      }
+      break;
+    }
+
+    case '시계': { // 째깍째깍 시계 소리
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          const isTick = i % 2 === 0;
+          // 기계음 충격
+          const osc = ac.createOscillator();
+          const og = ac.createGain();
+          osc.connect(og); og.connect(ac.destination);
+          osc.type = 'square';
+          osc.frequency.value = isTick ? 1300 : 900;
+          og.gain.setValueAtTime(0.12 * _itemVolume, ac.currentTime);
+          og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.03);
+          osc.start(); osc.stop(ac.currentTime + 0.03);
+          // 클릭 노이즈
+          const nn = Math.floor(ac.sampleRate * 0.02);
+          const nbuf = ac.createBuffer(1, nn, ac.sampleRate);
+          const nd = nbuf.getChannelData(0);
+          for (let j = 0; j < nn; j++) nd[j] = Math.random() * 2 - 1;
+          const nsrc = ac.createBufferSource(); nsrc.buffer = nbuf;
+          const nflt = ac.createBiquadFilter(); nflt.type = 'highpass'; nflt.frequency.value = 1800;
+          const ng = ac.createGain();
+          ng.gain.setValueAtTime(0.18 * _itemVolume, ac.currentTime);
+          ng.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.02);
+          nsrc.connect(nflt); nflt.connect(ng); ng.connect(ac.destination);
+          nsrc.start(); nsrc.stop(ac.currentTime + 0.02);
+        }, i * 500);
+      }
+      break;
+    }
+
+    case '의자': { // 의자 삐그덕 소리
+      [0, 1100, 2200].forEach((delay, idx) => {
+        setTimeout(() => {
+          const dur = 0.55 + Math.random() * 0.2;
+          const n = Math.floor(ac.sampleRate * dur);
+          const buf = ac.createBuffer(1, n, ac.sampleRate);
+          const d = buf.getChannelData(0);
+          for (let j = 0; j < n; j++) {
+            const env = Math.sin(Math.PI * j / n);
+            d[j] = (Math.random() * 2 - 1) * env;
+          }
+          const src = ac.createBufferSource(); src.buffer = buf;
+          const flt = ac.createBiquadFilter(); flt.type = 'bandpass';
+          flt.frequency.value = 130 + idx * 30; flt.Q.value = 4;
+          const g = ac.createGain();
+          g.gain.setValueAtTime(0.38 * _itemVolume, ac.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+          src.connect(flt); flt.connect(g); g.connect(ac.destination);
+          src.start(); src.stop(ac.currentTime + dur);
+        }, delay);
+      });
+      break;
+    }
+
+    case '신발': { // 뛰는 발자국 소리
+      const stepMs = 340;
+      const numSteps = Math.floor(3000 / stepMs);
+      for (let i = 0; i < numSteps; i++) {
+        setTimeout(() => {
+          // 저주파 쿵 소리
+          const osc = ac.createOscillator();
+          const og = ac.createGain();
+          osc.connect(og); og.connect(ac.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(110, ac.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(55, ac.currentTime + 0.1);
+          og.gain.setValueAtTime(0.55 * _itemVolume, ac.currentTime);
+          og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.1);
+          osc.start(); osc.stop(ac.currentTime + 0.1);
+          // 바닥 마찰 소리
+          const nn = Math.floor(ac.sampleRate * 0.07);
+          const nbuf = ac.createBuffer(1, nn, ac.sampleRate);
+          const nd = nbuf.getChannelData(0);
+          for (let j = 0; j < nn; j++) nd[j] = Math.random() * 2 - 1;
+          const nsrc = ac.createBufferSource(); nsrc.buffer = nbuf;
+          const nflt = ac.createBiquadFilter(); nflt.type = 'bandpass';
+          nflt.frequency.value = 450; nflt.Q.value = 2;
+          const ng = ac.createGain();
+          ng.gain.setValueAtTime(0.18 * _itemVolume, ac.currentTime);
+          ng.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.07);
+          nsrc.connect(nflt); nflt.connect(ng); ng.connect(ac.destination);
+          nsrc.start(); nsrc.stop(ac.currentTime + 0.07);
+        }, i * stepMs);
+      }
+      break;
+    }
+
+    case '거울': { // 거울 닦는 소리
+      // 앞뒤로 닦는 마찰음 (진폭 변조 노이즈)
+      const wn = Math.floor(ac.sampleRate * 3.0);
+      const wbuf = ac.createBuffer(1, wn, ac.sampleRate);
+      const wd = wbuf.getChannelData(0);
+      for (let i = 0; i < wn; i++) {
+        const env = 0.5 + 0.5 * Math.sin(2 * Math.PI * 2.5 * i / ac.sampleRate);
+        wd[i] = (Math.random() * 2 - 1) * env;
+      }
+      const wsrc = ac.createBufferSource(); wsrc.buffer = wbuf;
+      const wflt = ac.createBiquadFilter(); wflt.type = 'bandpass';
+      wflt.frequency.value = 2800; wflt.Q.value = 1.2;
+      const wg = ac.createGain(); wg.gain.setValueAtTime(0.14 * _itemVolume, ac.currentTime);
+      wsrc.connect(wflt); wflt.connect(wg); wg.connect(ac.destination);
+      wsrc.start(); wsrc.stop(ac.currentTime + 3.0);
+      // 유리 끽 소리 (주기적)
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const dur = 0.12;
+          const osc = ac.createOscillator();
+          const og = ac.createGain();
+          osc.connect(og); og.connect(ac.destination);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1700, ac.currentTime);
+          osc.frequency.linearRampToValueAtTime(2300, ac.currentTime + dur / 2);
+          osc.frequency.linearRampToValueAtTime(1700, ac.currentTime + dur);
+          og.gain.setValueAtTime(0.07 * _itemVolume, ac.currentTime);
+          og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+          osc.start(); osc.stop(ac.currentTime + dur);
+        }, 200 + i * 580);
+      }
+      break;
+    }
   }
 }
 
