@@ -443,7 +443,7 @@
       width: 68px;
       transform-origin: 34px 290px;
       cursor: pointer;
-      transition: filter 0.18s ease;
+      transition: filter 0.18s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
     }
     .spread-wrap:hover:not(.picked):not(.dimmed) {
       filter: brightness(1.35) drop-shadow(0 0 8px rgba(255,255,255,0.55));
@@ -451,6 +451,10 @@
     .spread-wrap.picked {
       pointer-events: none;
       filter: brightness(0.45) saturate(0.2) sepia(0.3);
+    }
+    /* 선택 직후 잠깐 위로 올라오는 상태 (JS로 angle 포함 transform 설정) */
+    .spread-wrap.lift-up {
+      filter: brightness(1.5) drop-shadow(0 0 14px rgba(255,215,80,0.8));
     }
     .spread-wrap.dimmed {
       pointer-events: none;
@@ -553,25 +557,35 @@
       align-items: center; justify-content: center;
       padding: 8px 7px;
     }
-    .slot-front-face { transform: rotateY(180deg); justify-content: flex-start; padding: 16px 12px 12px; position: relative; }
+    .slot-front-face {
+      transform: rotateY(180deg);
+      justify-content: center;
+      align-items: center;
+      padding: 12px 10px;
+      position: relative;
+      width: 132px; height: 198px;
+    }
     .slot-inner-border { position: absolute; inset: 8px; border-radius: 10px; pointer-events: none; }
     .slot-symbol { font-size: 2.2rem; margin-bottom: 8px; line-height: 1; }
     .slot-card-label { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; color: #fff; }
     .slot-hint { font-size: 0.65rem; margin-top: 6px; opacity: 0.7; color: #fff; }
     .slot-front-q {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
-      font-size: 0.68rem; line-height: 1.65; text-align: center; color: #aaa; flex-shrink: 0;
+      font-size: 0.63rem; line-height: 1.6; text-align: center; color: #aaa;
+      flex-shrink: 0; width: 100%;
     }
     .slot-value-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center;
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
       border-top: 1px solid rgba(0,0,0,0.08);
-      margin-top: 10px; padding: 8px 4px 0; width: 100%;
+      margin-top: 8px; padding: 8px 4px 0;
+      flex: 1;
       overflow: hidden;
     }
     .slot-front-value {
       font-family: 'HeirofLight', 'Nanum Myeongjo', serif;
       font-size: 1.05rem; font-weight: 700; line-height: 1.5;
-      text-align: center; word-break: keep-all;
+      text-align: center; word-break: keep-all; width: 100%;
     }
     .slot-name-label { font-size: 0.8rem; color: #aaa; margin-top: 9px; }
     .tarot-instruction {
@@ -690,6 +704,7 @@
       .fan-symbol { font-size: 0.95rem; }
       .tarot-slot { width: 100px; height: 150px; }
       .slot-card { width: 100px; height: 150px; }
+      .slot-front-face { width: 100px; height: 150px; }
       .slot-symbol { font-size: 1.8rem; }
       .slot-front-value { font-size: 0.88rem; }
       .tarot-title { font-size: 1.5rem; }
@@ -1075,6 +1090,7 @@ function initTarotSpread() {
     wrap.className = 'spread-wrap';
     wrap.id = `spread-wrap-${i}`;
     wrap.style.cssText = `transform:rotate(${angle}deg); z-index:${zIdx};`;
+    wrap.dataset.angle = angle; // 각도 저장 (lift 애니메이션용)
 
     wrap.innerHTML = `
       <div class="fan-card-inner card-back-dark">
@@ -1095,8 +1111,17 @@ function pickTarotCard(idx, bg, c2) {
   _tarotPickCount++;
   const slotIdx = _tarotPickCount - 1;
 
-  // 팬에서 선택됨 표시 (흐리게)
-  wrap.classList.add('picked');
+  // 선택 즉시 위로 6px(≈1.5mm) lift 애니메이션
+  const angle = wrap.dataset.angle || 0;
+  wrap.classList.add('lift-up');
+  wrap.style.transform = `rotate(${angle}deg) translateY(-6px)`;
+
+  // 약간 후에 picked 상태(어둡게)로 전환
+  setTimeout(() => {
+    wrap.classList.remove('lift-up');
+    wrap.classList.add('picked');
+    wrap.style.transform = `rotate(${angle}deg) translateY(-6px)`;
+  }, 320);
 
   // 슬롯에 카드 채우기
   _fillSlot(slotIdx, bg, c2);
